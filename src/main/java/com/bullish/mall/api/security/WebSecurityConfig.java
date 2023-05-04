@@ -1,17 +1,14 @@
 package com.bullish.mall.api.security;
 
+import com.bullish.mall.common.constant.Role;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import static java.util.Arrays.asList;
 
 @Configuration
 @EnableWebSecurity
@@ -22,19 +19,32 @@ public class WebSecurityConfig {
         return new JwtTokenFilter();
     }
 
-    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.csrf()
-                .disable()
-                .cors()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                .and()
+        http
+                .csrf().disable()
+                .httpBasic().disable()
+                .formLogin().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeHttpRequests();
+                .exceptionHandling()
+                .authenticationEntryPoint(
+                        (request, response, ex) -> {
+                            response.sendError(
+                                    HttpServletResponse.SC_UNAUTHORIZED,
+                                    ex.getMessage()
+                            );
+                        }
+                )
+                .and()
+                .authorizeRequests(requests -> requests
+                        .requestMatchers("/h2**").permitAll()
+                        .requestMatchers("/user/login").permitAll()
+                        .requestMatchers("/user/info").authenticated()
+                        .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
+                );
 
         http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
