@@ -1,5 +1,6 @@
-package com.bullish.mall.entity;
+package com.bullish.mall.core.user;
 
+import com.bullish.mall.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -15,14 +16,12 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseEntity{
+public class User extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
 
-    private String name;
-
-    private String loginPassword;
+    private String username;
 
     private Boolean admin = false;
 }
