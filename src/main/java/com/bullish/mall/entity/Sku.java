@@ -26,4 +26,6 @@ public class Sku extends BaseEntity {
 
     @Column(precision=10, scale=2)
     private BigDecimal price;
+
+    private Product product;
 }

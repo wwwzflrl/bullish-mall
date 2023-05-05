@@ -67,7 +67,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private List<GrantedAuthority> getGrantedAuthorities(User user) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getAdmin() ? Role.ADMIN.name() : Role.NORMAL.name()));
+        authorities.add(new SimpleGrantedAuthority(user.getAdmin() ? Role.ADMIN.name() : Role.USER.name()));
         return authorities;
     }
 }

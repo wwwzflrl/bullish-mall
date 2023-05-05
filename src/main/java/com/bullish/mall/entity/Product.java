@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
@@ -23,4 +26,11 @@ public class Product extends BaseEntity {
     private String content;
 
     private Long ownerId;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST})
+    private Set<Tag> tags = new HashSet<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Sku Sku;
 }

@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductTag extends BaseEntity{
+public class Tag extends BaseEntity{
     @Id
     @GeneratedValue
     private Long id;

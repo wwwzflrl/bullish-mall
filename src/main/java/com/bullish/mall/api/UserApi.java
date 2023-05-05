@@ -1,7 +1,7 @@
 package com.bullish.mall.api;
 
 import com.bullish.mall.api.exception.InvalidAuthenticationException;
-import com.bullish.mall.api.request.LoginBody;
+import com.bullish.mall.api.request.LoginDto;
 import com.bullish.mall.api.response.UserWithToken;
 import com.bullish.mall.api.security.JwtService;
 import com.bullish.mall.core.user.User;
@@ -23,8 +23,8 @@ public class UserApi {
     private UserRepository userRepository;
 
     @PostMapping("/login")
-    public ResponseEntity userLogin(@Valid @RequestBody LoginBody loginBody) {
-        Optional<User> user = userRepository.findByUsername(loginBody.getUsername());
+    public ResponseEntity userLogin(@Valid @RequestBody LoginDto loginDto) {
+        Optional<User> user = userRepository.findByUsername(loginDto.getUsername());
         if (user.isPresent()) {
             return ResponseEntity.ok(new UserWithToken(user.get(), jwtService.toToken(user.get())));
         } else {

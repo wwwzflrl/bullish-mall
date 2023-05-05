@@ -1,5 +1,6 @@
 package com.bullish.mall.integration;
 
+import com.bullish.mall.api.request.LoginDto;
 import com.bullish.mall.api.security.DefaultJwtService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,7 @@ public class UserApiTest extends TestWithUser{
     {
         given()
                 .contentType("application/json")
-                .body(loginBody(""))
+                .body(LoginDto.builder().username("").build())
                 .when()
                 .post("/user/login")
                 .then()
@@ -49,7 +50,7 @@ public class UserApiTest extends TestWithUser{
     {
         given()
                 .contentType("application/json")
-                .body(loginBody("invalid user"))
+                .body(LoginDto.builder().username("fake user").build())
                 .when()
                 .post("/user/login")
                 .then()
@@ -62,19 +63,12 @@ public class UserApiTest extends TestWithUser{
     {
         given()
                 .contentType("application/json")
-                .body(loginBody("admin"))
+                .body(LoginDto.builder().username("admin").build())
                 .when()
                 .post("/user/login")
                 .then()
                 .statusCode(200)
                 .body("username", equalTo("admin"))
                 .body("username", (e) -> equalTo(jwtService.getSubFromToken(e.path("token")).get()));
-    }
-
-
-    private Map<String, String> loginBody(String username) {
-        Map<String, String> body = new HashMap<>();
-        body.put("username", username);
-        return body;
     }
 }
