@@ -22,11 +22,6 @@ public class UserApi {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/info")
-    public String userInfo() {
-        return "welcome";
-    }
-
     @PostMapping("/login")
     public ResponseEntity userLogin(@Valid @RequestBody LoginBody loginBody) {
         Optional<User> user = userRepository.findByUsername(loginBody.getUsername());

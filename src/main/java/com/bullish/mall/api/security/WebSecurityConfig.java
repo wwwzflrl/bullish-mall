@@ -42,8 +42,8 @@ public class WebSecurityConfig {
                 .authorizeRequests(requests -> requests
                         .requestMatchers("/h2**").permitAll()
                         .requestMatchers("/user/login").permitAll()
-                        .requestMatchers("/user/info").authenticated()
                         .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
+                        .anyRequest().denyAll()
                 );
 
         http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
