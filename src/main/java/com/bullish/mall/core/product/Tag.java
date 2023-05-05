@@ -1,14 +1,15 @@
 package com.bullish.mall.core.product;
 
 import com.bullish.mall.core.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import java.util.List;
+
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -22,4 +23,8 @@ public class Tag extends BaseEntity {
     private Long id;
 
     private String name;
+
+    @JsonIgnore
+    @ManyToMany(cascade = {CascadeType.ALL})
+    private List<Product> products;
 }

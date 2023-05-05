@@ -1,7 +1,9 @@
 package com.bullish.mall.integration;
 
 import com.bullish.mall.api.request.ProductDto;
+import com.bullish.mall.core.product.*;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 @SpringBootTest
@@ -21,21 +28,48 @@ public class ProductApiTest extends TestWithUser {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private TagRepository tagRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
         RestAssuredMockMvc.mockMvc(mockMvc);
+
+        tagRepository.deleteAll();
+        productRepository.deleteAll();
     }
 
     @Test
-    public void fail_to_valid_product_dto() throws Exception
+    public void success_get_products()
+    {
+        createMockProduct();
+        createMockProduct();
+        given()
+                .contentType("application/json")
+                .when()
+                .get("/product")
+                .then()
+                .statusCode(200)
+                .body("size()", equalTo(2))
+                .body("[0].name", equalTo("name"))
+                .body("[0].content", equalTo("content"))
+                .body("[0].sku.price", equalTo(200.00F));
+    }
+
+
+    @Test
+    public void fail_to_valid_product_dto()
     {
         given()
                 .contentType("application/json")
                 .body(ProductDto.builder()
                         .name("")
-                        .price(new BigDecimal("100.223"))
+                        .price(new BigDecimal("-100.223"))
                         .content("")
                         .tags(Arrays.asList())
                         .build()
@@ -44,14 +78,15 @@ public class ProductApiTest extends TestWithUser {
                 .post("/product")
                 .then()
                 .statusCode(422)
-                .body("errors.prices[0]", equalTo("numeric value out of bounds (<8 digits>.<2 digits> expected)"))
+                .body("errors.price", hasItem("must be greater than or equal to 0"))
+                .body("errors.price", hasItem("numeric value out of bounds (<8 digits>.<2 digits> expected)"))
                 .body("errors.name[0]", equalTo("can't be empty"))
                 .body("errors.content[0]", equalTo("can't be empty"))
                 .body("errors.tags[0]", equalTo("need at least one tag"));
     }
 
     @Test
-    public void success_to_create_product_without_duplicate_tags() throws Exception
+    public void success_to_create_product_without_duplicate_tags()
     {
         given()
                 .contentType("application/json")
@@ -72,5 +107,38 @@ public class ProductApiTest extends TestWithUser {
                 .body("tags[0].name", equalTo("Test Tag 2"))
                 .body("tags[1].name", equalTo("Test Tag 1"))
                 .body("sku.price", equalTo(100.22F));
+    }
+
+    @Test
+    public void fail_to_delete_invalid_product_id() {
+        given()
+                .contentType("application/json")
+                .when()
+                .delete("/product/xxxx")
+                .then()
+                .statusCode(400)
+                .body("detail", equalTo("Failed to convert 'id' with value: 'xxxx'"));
+    }
+
+    @Test
+    public void success_to_delete_product() {
+        Long id = createMockProduct().getId();
+        given()
+                .contentType("application/json")
+                .when()
+                .delete("/product/" + id)
+                .then()
+                .statusCode(200);
+        Assertions.assertEquals(productRepository.count(), 0);
+    }
+
+    private Product createMockProduct() {
+        return productRepository.save(Product.builder()
+                .name("name")
+                .content("content")
+                .Sku(Sku.builder().stocks(0L).price(new BigDecimal("200.00")).build())
+                .tags(new HashSet<>(Arrays.asList(Tag.builder().name("tag").build())))
+                .build()
+        );
     }
 }
