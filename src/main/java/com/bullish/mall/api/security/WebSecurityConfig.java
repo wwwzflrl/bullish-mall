@@ -1,6 +1,5 @@
 package com.bullish.mall.api.security;
 
-import com.bullish.mall.common.constant.Role;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

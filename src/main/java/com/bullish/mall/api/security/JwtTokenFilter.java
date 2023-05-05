@@ -1,6 +1,5 @@
 package com.bullish.mall.api.security;
 
-import com.bullish.mall.common.constant.Role;
 import com.bullish.mall.core.user.User;
 import com.bullish.mall.core.user.UserRepository;
 import jakarta.servlet.FilterChain;

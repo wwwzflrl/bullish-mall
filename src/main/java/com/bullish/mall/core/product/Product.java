@@ -1,6 +1,6 @@
 package com.bullish.mall.core.product;
 
-import com.bullish.mall.entity.BaseEntity;
+import com.bullish.mall.core.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.bullish.mall.entity;
+package com.bullish.mall.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
