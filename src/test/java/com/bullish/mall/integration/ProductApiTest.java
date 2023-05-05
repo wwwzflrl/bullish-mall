@@ -45,12 +45,24 @@ public class ProductApiTest extends TestWithUser {
     }
 
     @Test
+    public void fail_to_get_products_without_auth()
+    {
+        given()
+                .contentType("application/json")
+                .when()
+                .get("/product")
+                .then()
+                .statusCode(401);
+    }
+
+    @Test
     public void success_get_products()
     {
         createMockProduct();
         createMockProduct();
         given()
                 .contentType("application/json")
+                .header("Authorization", "Token " + userToken)
                 .when()
                 .get("/product")
                 .then()
@@ -61,12 +73,12 @@ public class ProductApiTest extends TestWithUser {
                 .body("[0].sku.price", equalTo(200.00F));
     }
 
-
     @Test
     public void fail_to_valid_product_dto()
     {
         given()
                 .contentType("application/json")
+                .header("Authorization", "Token " + adminToken)
                 .body(ProductDto.builder()
                         .name("")
                         .price(new BigDecimal("-100.223"))
@@ -86,10 +98,29 @@ public class ProductApiTest extends TestWithUser {
     }
 
     @Test
+    public void fail_to_create_product_for_user()
+    {
+        given()
+                .contentType("application/json")
+                .header("Authorization", "Token " + userToken)
+                .body(ProductDto.builder()
+                        .name("test")
+                        .price(new BigDecimal("100.22"))
+                        .content("Product Test")
+                        .tags(Arrays.asList("Test Tag 1", "Test Tag 2", "Test Tag 1"))
+                        .build()
+                )
+                .when()
+                .post("/product")
+                .then()
+                .statusCode(403);
+    }
+    @Test
     public void success_to_create_product_without_duplicate_tags()
     {
         given()
                 .contentType("application/json")
+                .header("Authorization", "Token " + adminToken)
                 .body(ProductDto.builder()
                         .name("test")
                         .price(new BigDecimal("100.22"))
@@ -113,6 +144,7 @@ public class ProductApiTest extends TestWithUser {
     public void fail_to_delete_invalid_product_id() {
         given()
                 .contentType("application/json")
+                .header("Authorization", "Token " + adminToken)
                 .when()
                 .delete("/product/xxxx")
                 .then()
@@ -121,10 +153,22 @@ public class ProductApiTest extends TestWithUser {
     }
 
     @Test
+    public void fail_to_delete_product_for_user() {
+        given()
+                .contentType("application/json")
+                .header("Authorization", "Token " + userToken)
+                .when()
+                .delete("/product/1")
+                .then()
+                .statusCode(403);
+    }
+
+    @Test
     public void success_to_delete_product() {
         Long id = createMockProduct().getId();
         given()
                 .contentType("application/json")
+                .header("Authorization", "Token " + adminToken)
                 .when()
                 .delete("/product/" + id)
                 .then()

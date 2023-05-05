@@ -1,5 +1,6 @@
 package com.bullish.mall.integration;
 
+import com.bullish.mall.api.security.JwtService;
 import com.bullish.mall.core.user.User;
 import com.bullish.mall.core.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,10 +12,19 @@ abstract class TestWithUser {
     @Autowired
     protected UserRepository userRepository;
 
+    @Autowired
+    protected JwtService jwtService;
+
+    protected String adminToken;
+
+    protected String userToken;
+
     protected void userFixture() {
         userRepository.deleteAll();
-        userRepository.save(User.builder().admin(true).username("admin").build());
-        userRepository.save(User.builder().admin(false).username("totti").build());
+        User admin = userRepository.save(User.builder().admin(true).username("admin").build());
+        User user = userRepository.save(User.builder().admin(false).username("totti").build());
+        adminToken = jwtService.toToken(admin);
+        userToken = jwtService.toToken(user);
     }
 
     @BeforeEach
