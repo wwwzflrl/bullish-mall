@@ -42,7 +42,7 @@ public class WebSecurityConfig {
                 .authorizeRequests(requests -> requests
                         .requestMatchers("/h2**").permitAll()
                         .requestMatchers("/user/login").permitAll()
-                        .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
+                        .requestMatchers("/product/**").permitAll()
                         .anyRequest().denyAll()
                 );
 

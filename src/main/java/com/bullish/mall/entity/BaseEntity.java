@@ -1,5 +1,6 @@
 package com.bullish.mall.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,13 +13,15 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @NoArgsConstructor
 public abstract class BaseEntity {
+    @JsonIgnore
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-
+    @JsonIgnore
     @Version
     private Long version;
 

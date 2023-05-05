@@ -1,5 +1,6 @@
-package com.bullish.mall.entity;
+package com.bullish.mall.core.product;
 
+import com.bullish.mall.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -15,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Tag extends BaseEntity{
+public class Tag extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;

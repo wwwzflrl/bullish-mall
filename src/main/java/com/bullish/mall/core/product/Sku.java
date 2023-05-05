@@ -1,9 +1,7 @@
-package com.bullish.mall.entity;
+package com.bullish.mall.core.product;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.bullish.mall.entity.BaseEntity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,6 +24,4 @@ public class Sku extends BaseEntity {
 
     @Column(precision=10, scale=2)
     private BigDecimal price;
-
-    private Product product;
 }

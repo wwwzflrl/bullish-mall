@@ -33,7 +33,7 @@ public class UserApiTest extends TestWithUser{
     }
 
     @Test
-    public void fail_to_login_no_valid_request() throws Exception
+    public void fail_to_valid_login_dto() throws Exception
     {
         given()
                 .contentType("application/json")

@@ -1,5 +1,6 @@
-package com.bullish.mall.entity;
+package com.bullish.mall.core.product;
 
+import com.bullish.mall.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,12 +26,10 @@ public class Product extends BaseEntity {
 
     private String content;
 
-    private Long ownerId;
-
     @ManyToMany(cascade = {CascadeType.PERSIST})
     private Set<Tag> tags = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
-    private Sku Sku;
+    private com.bullish.mall.core.product.Sku Sku;
 }
