@@ -25,6 +25,6 @@ public class Tag extends BaseEntity {
     private String name;
 
     @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(mappedBy = "tags")
     private List<Product> products;
 }

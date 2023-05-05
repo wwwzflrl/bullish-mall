@@ -29,6 +29,19 @@ public class UserApiTest extends TestWithUser{
     }
 
     @Test
+    public void success_get_user_info() throws Exception
+    {
+        given()
+                .contentType("application/json")
+                .header("Authorization", "Token " + userToken)
+                .when()
+                .get("/user")
+                .then()
+                .statusCode(200)
+                .body("errors.username[0]", equalTo("can't be empty"));
+    }
+
+    @Test
     public void fail_to_valid_login_dto() throws Exception
     {
         given()

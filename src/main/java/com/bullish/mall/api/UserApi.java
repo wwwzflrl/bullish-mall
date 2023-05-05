@@ -9,6 +9,7 @@ import com.bullish.mall.core.user.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -21,6 +22,11 @@ public class UserApi {
 
     @Autowired
     private UserRepository userRepository;
+
+    @GetMapping
+    public ResponseEntity userInfo(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(user);
+    }
 
     @PostMapping("/login")
     public ResponseEntity userLogin(@Valid @RequestBody LoginDto loginDto) {

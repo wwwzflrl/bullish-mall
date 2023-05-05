@@ -14,9 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.Matchers.hasItem;
@@ -29,9 +26,6 @@ public class ProductApiTest extends TestWithUser {
     private MockMvc mockMvc;
 
     @Autowired
-    private TagRepository tagRepository;
-
-    @Autowired
     private ProductRepository productRepository;
 
     @Override
@@ -40,7 +34,6 @@ public class ProductApiTest extends TestWithUser {
         super.setUp();
         RestAssuredMockMvc.mockMvc(mockMvc);
 
-        tagRepository.deleteAll();
         productRepository.deleteAll();
     }
 
@@ -70,7 +63,8 @@ public class ProductApiTest extends TestWithUser {
                 .body("size()", equalTo(2))
                 .body("[0].name", equalTo("name"))
                 .body("[0].content", equalTo("content"))
-                .body("[0].sku.price", equalTo(200.00F));
+                .body("[0].sku.price", equalTo(200.00F))
+                .body("[0].tags[0].name", equalTo("tag"));;
     }
 
     @Test
@@ -131,7 +125,6 @@ public class ProductApiTest extends TestWithUser {
                 .when()
                 .post("/product")
                 .then()
-                .statusCode(200)
                 .body("name", equalTo("test"))
                 .body("content", equalTo("Product Test"))
                 .body("tags.size()", equalTo(2))
@@ -180,7 +173,7 @@ public class ProductApiTest extends TestWithUser {
         return productRepository.save(Product.builder()
                 .name("name")
                 .content("content")
-                .Sku(Sku.builder().stocks(0L).price(new BigDecimal("200.00")).build())
+                .sku(Sku.builder().stocks(0L).price(new BigDecimal("200.00")).build())
                 .tags(new HashSet<>(Arrays.asList(Tag.builder().name("tag").build())))
                 .build()
         );

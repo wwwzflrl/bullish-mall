@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -26,10 +25,10 @@ public class Product extends BaseEntity {
 
     private String content;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST})
-    private Set<Tag> tags = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.ALL)
+    private Set<Tag> tags;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
-    private com.bullish.mall.core.product.Sku Sku;
+    @JoinColumn(name = "sku_id", referencedColumnName = "id")
+    private Sku sku;
 }
