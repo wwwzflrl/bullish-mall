@@ -14,7 +14,7 @@ import lombok.Data;
 public class DiscountDto {
     private Long id;
 
-    @NotBlank(message = "can't be empty")
+    @NotBlank
     private String description;
 
     @NotNull

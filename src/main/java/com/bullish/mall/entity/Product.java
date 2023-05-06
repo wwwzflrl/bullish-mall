@@ -20,6 +20,7 @@ public class Product extends BaseEntity {
 
     private String content;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<Sku> sku;
+    @Setter
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    private List<Sku> skuList;
 }

@@ -1,8 +1,9 @@
 package com.bullish.mall.unit.repository;
 
 import com.bullish.mall.entity.Product;
-import com.bullish.mall.entity.Sku;
 import com.bullish.mall.repository.ProductRepository;
+import com.bullish.mall.repository.SkuRepository;
+import com.bullish.mall.util.ProductUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -15,28 +16,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ProductRepositoryTest extends DbTestBase {
 
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    SkuRepository skuRepository;
+
     @PersistenceContext
     EntityManager entityManager;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
         productRepository.deleteAll();
+        createProductList();
     }
 
     @Test
-    public void avoid_n_plus_1() throws IOException {
-        createProducts();
+    public void avoidNPlusOne() throws IOException {
         Statistics statistics = entityManager.getEntityManagerFactory().unwrap(SessionFactory.class).getStatistics();
         Long beforeExecution = statistics.getQueryExecutionCount();
 
@@ -50,24 +50,19 @@ public class ProductRepositoryTest extends DbTestBase {
         Assertions.assertEquals(afterExecution - 1, beforeExecution);
     }
 
-    private void createProducts() {
-        productRepository.save(Product.builder()
-                .name("name1")
-                .content("content1")
-                .sku(List.of(Sku.builder()
-                        .price(new BigDecimal(200))
-                        .tags(Set.of("Tag1"))
-                        .build()
-                ))
-                .build());
-        productRepository.save(Product.builder()
-                .name("name2")
-                .content("content2")
-                .sku(List.of(Sku.builder()
-                        .tags(Set.of("Tag2"))
-                        .price(new BigDecimal(300))
-                        .build()
-                ))
-                .build());
+    @Test
+    public void deleteProductAlsoRelations() {
+        productRepository.deleteAll();
+
+        Long skuCount = skuRepository.count();
+
+        Assertions.assertEquals(skuCount, 0);
+    }
+
+    private void createProductList() {
+        productRepository.saveAll(List.of(
+                ProductUtil.getDefaultProduct(0),
+                ProductUtil.getDefaultProduct(1)
+        ));
     }
 }

@@ -10,4 +10,7 @@ import java.util.List;
 public interface ProductRepository extends CrudRepository<Product, Long> {
     @Override
     List<Product> findAll();
+
+    @Override
+    <S extends Product> List<S> saveAll(Iterable<S> entities);
 }

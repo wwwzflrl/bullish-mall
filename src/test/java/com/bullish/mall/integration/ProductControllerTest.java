@@ -1,22 +1,29 @@
 package com.bullish.mall.integration;
 
-import com.bullish.mall.dto.ProductDto;
+import com.bullish.mall.constant.TargetEnum;
+import com.bullish.mall.dto.SkuDto;
+import com.bullish.mall.dto.param.ProductParam;
+import com.bullish.mall.entity.Discount;
 import com.bullish.mall.entity.Product;
-import com.bullish.mall.entity.Sku;
+import com.bullish.mall.repository.DiscountRepository;
 import com.bullish.mall.repository.ProductRepository;
+import com.bullish.mall.util.DiscountUtil;
+import com.bullish.mall.util.ProductUtil;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.List;
+
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
-import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 @SpringBootTest
@@ -28,6 +35,9 @@ public class ProductControllerTest extends TestWithUser {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private DiscountRepository discountRepository;
+
     @Override
     @BeforeEach
     public void setUp() throws Exception {
@@ -35,104 +45,128 @@ public class ProductControllerTest extends TestWithUser {
         RestAssuredMockMvc.mockMvc(mockMvc);
 
         productRepository.deleteAll();
+        discountRepository.deleteAll();
     }
 
-    @Test
-    public void fail_to_get_products_without_auth()
-    {
-        given()
-                .contentType("application/json")
-                .when()
-                .get("/product")
-                .then()
-                .statusCode(401);
+    @Nested
+    public class getProductList {
+        @Test
+        public void failWithoutAuth()
+        {
+            given()
+                    .contentType("application/json")
+                    .when()
+                    .get("/product")
+                    .then()
+                    .statusCode(401);
+        }
+
+        @Test
+        public void successGetProductsWithRelations()
+        {
+            List<Product> productList = productRepository.saveAll(List.of(
+                    ProductUtil.getDefaultProduct(0),
+                    ProductUtil.getDefaultProduct(1)
+            ));
+            List<Discount> discountList = List.of(
+                    DiscountUtil.getDefaultDiscount(0),
+                    DiscountUtil.getDefaultDiscount(1)
+            );
+            discountList.get(0).getConfig().getTargetConfig().setProductIds(List.of(productList.get(1).getId()));
+            discountList.get(0).getConfig().getTargetConfig().setType(TargetEnum.SPECIFIED_PRODUCT.name());
+            discountRepository.saveAll(discountList);
+
+            given()
+                    .contentType("application/json")
+                    .header("Authorization", "Token " + userToken)
+                    .when()
+                    .get("/product")
+                    .then()
+                    .statusCode(200)
+                    .body("size()", equalTo(2))
+                    .body("[0].name", equalTo("name0"))
+                    .body("[0].content", equalTo("content0"))
+                    .body("[0].skuList[0].price", equalTo(200.00F))
+                    .body("[0].skuList[0].tags[0]", equalTo("Tag0"))
+                    .body("[0].discountList.size()", equalTo(1))
+                    .body("[1].discountList.size()", equalTo(2));
+        }
+
     }
 
-    @Test
-    public void success_get_products()
-    {
-        createMockProduct();
-        createMockProduct();
-        given()
-                .contentType("application/json")
-                .header("Authorization", "Token " + userToken)
-                .when()
-                .get("/product")
-                .then()
-                .statusCode(200)
-                .body("size()", equalTo(2))
-                .body("[0].name", equalTo("name"))
-                .body("[0].content", equalTo("content"))
-                .body("[0].sku.price", equalTo(200.00F))
-                .body("[0].tags[0].name", equalTo("tag"));;
+    @Nested
+    public class CreateProduct {
+        @Test
+        public void failValidEmptyProductParam()
+        {
+            given()
+                    .contentType("application/json")
+                    .header("Authorization", "Token " + adminToken)
+                    .body(ProductParam.builder().build())
+                    .when()
+                    .post("/product")
+                    .then()
+                    .statusCode(422)
+                    .body("errors.skuList", hasItem("need at least one sku"))
+                    .body("errors.name", hasItem("must not be blank"))
+                    .body("errors.content", hasItem("must not be blank"));
+        }
+
+        @Test
+        public void failValidOtherProductParam()
+        {
+            given()
+                    .contentType("application/json")
+                    .header("Authorization", "Token " + adminToken)
+                    .body(ProductParam.builder().skuList(List.of(
+                            SkuDto.builder().tags(List.of("")).price(new BigDecimal(-234.55)).build()
+                    )).build())
+                    .when()
+                    .post("/product")
+                    .then()
+                    .statusCode(422)
+                    .body("errors.\"skuList[0].price\"", hasItems(
+                            "must be greater than or equal to 0",
+                            "numeric value out of bounds (<8 digits>.<2 digits> expected)"
+                    ))
+                    .body("errors.\"skuList[0].tags[0]\"", hasItem("must not be blank"));
+        }
+
+        @Test
+        public void failCreateProductForUser()
+        {
+            given()
+                    .contentType("application/json")
+                    .header("Authorization", "Token " + userToken)
+                    .body(ProductUtil.getDefaultProductParam(0))
+                    .when()
+                    .post("/product")
+                    .then()
+                    .statusCode(403);
+        }
+
+        @Test
+        public void successCreateProductWithRelation()
+        {
+            ProductParam productParam = ProductUtil.getDefaultProductParam(0);
+            productParam.getSkuList().get(0).setTags(List.of("Duplicate", "Duplicate"));
+            given()
+                    .contentType("application/json")
+                    .header("Authorization", "Token " + adminToken)
+                    .body(productParam)
+                    .when()
+                    .post("/product")
+                    .then()
+                    .body("name", equalTo("name0"))
+                    .body("content", equalTo("content0"))
+                    .body("skuList.size()", equalTo(1))
+                    .body("skuList[0].price", equalTo(200))
+                    .body("skuList[0].tags.size()", equalTo(1));
+        }
     }
 
-    @Test
-    public void fail_to_valid_product_dto()
-    {
-        given()
-                .contentType("application/json")
-                .header("Authorization", "Token " + adminToken)
-                .body(ProductDto.builder()
-                        .name("")
-                        .price(new BigDecimal("-100.223"))
-                        .content("")
-                        .tags(Arrays.asList())
-                        .build()
-                )
-                .when()
-                .post("/product")
-                .then()
-                .statusCode(422)
-                .body("errors.price", hasItem("must be greater than or equal to 0"))
-                .body("errors.price", hasItem("numeric value out of bounds (<8 digits>.<2 digits> expected)"))
-                .body("errors.name[0]", equalTo("can't be empty"))
-                .body("errors.content[0]", equalTo("can't be empty"))
-                .body("errors.tags[0]", equalTo("need at least one tag"));
-    }
-
-    @Test
-    public void fail_to_create_product_for_user()
-    {
-        given()
-                .contentType("application/json")
-                .header("Authorization", "Token " + userToken)
-                .body(ProductDto.builder()
-                        .name("test")
-                        .price(new BigDecimal("100.22"))
-                        .content("Product Test")
-                        .tags(Arrays.asList("Test Tag 1", "Test Tag 2", "Test Tag 1"))
-                        .build()
-                )
-                .when()
-                .post("/product")
-                .then()
-                .statusCode(403);
-    }
-    @Test
-    public void success_to_create_product_without_duplicate_tags()
-    {
-        given()
-                .contentType("application/json")
-                .header("Authorization", "Token " + adminToken)
-                .body(ProductDto.builder()
-                        .name("test")
-                        .price(new BigDecimal("100.22"))
-                        .content("Product Test")
-                        .tags(Arrays.asList("Test Tag 1", "Test Tag 2", "Test Tag 1"))
-                        .build()
-                )
-                .when()
-                .post("/product")
-                .then()
-                .body("name", equalTo("test"))
-                .body("content", equalTo("Product Test"))
-                .body("tags.size()", equalTo(2))
-                .body("tags[0].name", equalTo("Test Tag 2"))
-                .body("tags[1].name", equalTo("Test Tag 1"))
-                .body("sku.price", equalTo(100.22F));
-    }
-
+    @Nested
+    public class deleteProduct {
     @Test
     public void fail_to_delete_invalid_product_id() {
         given()
@@ -158,7 +192,7 @@ public class ProductControllerTest extends TestWithUser {
 
     @Test
     public void success_to_delete_product() {
-        Long id = createMockProduct().getId();
+        Long id = productRepository.save(ProductUtil.getDefaultProduct(0)).getId();
         given()
                 .contentType("application/json")
                 .header("Authorization", "Token " + adminToken)
@@ -169,13 +203,5 @@ public class ProductControllerTest extends TestWithUser {
         Assertions.assertEquals(productRepository.count(), 0);
     }
 
-    private Product createMockProduct() {
-        return productRepository.save(Product.builder()
-                .name("name")
-                .content("content")
-                .sku(Sku.builder().stocks(0L).price(new BigDecimal("200.00")).build())
-                .tags(new HashSet<>(Arrays.asList(Tag.builder().name("tag").build())))
-                .build()
-        );
     }
 }

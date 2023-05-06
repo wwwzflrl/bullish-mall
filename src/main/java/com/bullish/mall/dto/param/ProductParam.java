@@ -15,10 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductParam {
-    @NotBlank(message = "can't be empty")
+    @NotBlank
     private String name;
 
-    @NotBlank(message = "can't be empty")
+    @NotBlank
     private String content;
 
     @NotEmpty(message = "need at least one sku")

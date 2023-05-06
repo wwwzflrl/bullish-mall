@@ -1,5 +1,6 @@
 package com.bullish.mall.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,8 +24,11 @@ public class Sku extends BaseEntity {
     private BigDecimal price;
 
     @Type(JsonType.class)
+    @Column(nullable = false, columnDefinition = "json")
     private Set<String> tags;
 
+    @JsonIgnore
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Product product;
 }

@@ -2,6 +2,7 @@ package com.bullish.mall.dto.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class TargetConfig extends CommonConfig {
     private List<Long> productIds;
 }

@@ -38,7 +38,7 @@ public class UserApiTest extends TestWithUser{
                 .get("/user")
                 .then()
                 .statusCode(200)
-                .body("errors.username[0]", equalTo("can't be empty"));
+                .body("errors.username[0]", equalTo("must not be blank"));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class UserApiTest extends TestWithUser{
                 .post("/user/login")
                 .then()
                 .statusCode(422)
-                .body("errors.username[0]", equalTo("can't be empty"));
+                .body("errors.username[0]", equalTo("must not be blank"));
     }
 
     @Test

@@ -39,8 +39,9 @@ public class ProductController {
                 .id(product.getId())
                 .name(product.getName())
                 .content(product.getContent())
-                .skuList(product.getSku().stream()
+                .skuList(product.getSkuList().stream()
                         .map((sku) -> SkuDto.builder()
+                            .id(sku.getId())
                             .price(sku.getPrice())
                             .tags(sku.getTags().stream().toList())
                             .build()
@@ -64,22 +65,20 @@ public class ProductController {
     @IsAdmin
     @PostMapping
     public ResponseEntity createProduct(@Valid @RequestBody ProductParam productParam) {
-        Product product = productRepository.save(Product
-                .builder()
+        Product product = Product.builder()
                 .content(productParam.getContent())
                 .name(productParam.getName())
-                .sku(productParam.getSkuList()
-                        .stream()
-                        .map((sku) -> Sku
-                                .builder()
-                                .tags(sku.getTags().stream().collect(Collectors.toSet()))
-                                .price(sku.getPrice())
-                                .build()
-                        ).collect(Collectors.toList())
-                )
-                .build()
-        );
-        return ResponseEntity.ok(product);
+                .build();
+        product.setSkuList(productParam.getSkuList()
+                .stream()
+                .map((sku) -> Sku
+                        .builder()
+                        .tags(sku.getTags().stream().collect(Collectors.toSet()))
+                        .price(sku.getPrice())
+                        .product(product)
+                        .build()
+                ).collect(Collectors.toList()));
+        return ResponseEntity.ok(productRepository.save(product));
     }
 
     @IsAdmin

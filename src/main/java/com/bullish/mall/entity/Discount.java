@@ -22,5 +22,6 @@ public class Discount extends BaseEntity {
     private String description;
 
     @Type(JsonType.class)
+    @Column(nullable = false, columnDefinition = "json")
     private DiscountConfigDto config;
 }
