@@ -1,6 +1,8 @@
 package com.bullish.mall.unit.repository;
 
-import com.bullish.mall.core.product.*;
+import com.bullish.mall.entity.Product;
+import com.bullish.mall.entity.Sku;
+import com.bullish.mall.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,8 +19,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.Set;
 
 public class ProductRepositoryTest extends DbTestBase {
 
@@ -53,14 +54,20 @@ public class ProductRepositoryTest extends DbTestBase {
         productRepository.save(Product.builder()
                 .name("name1")
                 .content("content1")
-                .sku(Sku.builder().stocks(0L).price(new BigDecimal("200.00")).build())
-                .tags(new HashSet<>(Arrays.asList(Tag.builder().name("tag1").build())))
+                .sku(List.of(Sku.builder()
+                        .price(new BigDecimal(200))
+                        .tags(Set.of("Tag1"))
+                        .build()
+                ))
                 .build());
         productRepository.save(Product.builder()
                 .name("name2")
                 .content("content2")
-                .sku(Sku.builder().stocks(0L).price(new BigDecimal("200.00")).build())
-                .tags(new HashSet<>(Arrays.asList(Tag.builder().name("tag2").build())))
+                .sku(List.of(Sku.builder()
+                        .tags(Set.of("Tag2"))
+                        .price(new BigDecimal(300))
+                        .build()
+                ))
                 .build());
     }
 }

@@ -1,7 +1,9 @@
 package com.bullish.mall.integration;
 
-import com.bullish.mall.api.request.ProductDto;
-import com.bullish.mall.core.product.*;
+import com.bullish.mall.dto.ProductDto;
+import com.bullish.mall.entity.Product;
+import com.bullish.mall.entity.Sku;
+import com.bullish.mall.repository.ProductRepository;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,18 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
-
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProductApiTest extends TestWithUser {
+public class ProductControllerTest extends TestWithUser {
     @Autowired
     private MockMvc mockMvc;
 

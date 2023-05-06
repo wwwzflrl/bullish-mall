@@ -1,7 +1,7 @@
-package com.bullish.mall.api.request;
+package com.bullish.mall.dto.param;
 
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.Min;
+import com.bullish.mall.dto.SkuDto;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -9,24 +9,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.List;
-
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDto {
+public class ProductParam {
     @NotBlank(message = "can't be empty")
     private String name;
 
     @NotBlank(message = "can't be empty")
     private String content;
 
-    @Min(0)
-    @Digits(integer = 8, fraction = 2)
-    private BigDecimal price;
-
-    @NotEmpty(message = "need at least one tag")
-    private List<@NotBlank() String> tags;
+    @NotEmpty(message = "need at least one sku")
+    @Valid
+    private List<SkuDto> skuList;
 }

@@ -1,5 +1,8 @@
 package com.bullish.mall.dto;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,11 +14,10 @@ import lombok.Data;
 public class DiscountDto {
     private Long id;
 
-    private String type;
-
-    private String requirement;
-
-    private String results;
-
+    @NotBlank(message = "can't be empty")
     private String description;
+
+    @NotNull
+    @Valid
+    private DiscountConfigDto config;
 }

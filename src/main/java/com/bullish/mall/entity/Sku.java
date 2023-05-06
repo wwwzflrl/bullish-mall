@@ -1,27 +1,30 @@
-package com.bullish.mall.core.product;
+package com.bullish.mall.entity;
 
-import com.bullish.mall.core.BaseEntity;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
 
 import java.math.BigDecimal;
+import java.util.Set;
+
 @EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
 @Entity
 @SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
 public class Sku extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
 
-    private Long stocks;
-
     @Column(precision=10, scale=2)
     private BigDecimal price;
+
+    @Type(JsonType.class)
+    private Set<String> tags;
+
+    @ManyToOne
+    private Product product;
 }

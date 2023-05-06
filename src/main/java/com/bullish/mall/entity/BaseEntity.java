@@ -1,14 +1,14 @@
-package com.bullish.mall.core;
+package com.bullish.mall.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 @SuperBuilder
 @MappedSuperclass
 @NoArgsConstructor

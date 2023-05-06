@@ -1,6 +1,6 @@
 package com.bullish.mall.core.user;
 
-import com.bullish.mall.core.BaseEntity;
+import com.bullish.mall.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
