@@ -1,4 +1,4 @@
-package com.bullish.mall.api.exception;
+package com.bullish.mall.exception;
 
 import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;

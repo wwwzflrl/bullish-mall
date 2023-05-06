@@ -1,4 +1,4 @@
-package com.bullish.mall.api.security;
+package com.bullish.mall.security;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 

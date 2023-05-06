@@ -1,4 +1,4 @@
-package com.bullish.mall.api.request;
+package com.bullish.mall.dto.param;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginDto {
+public class LoginParam {
   @NotBlank private String username;
 }

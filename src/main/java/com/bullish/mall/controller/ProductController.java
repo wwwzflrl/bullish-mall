@@ -1,6 +1,6 @@
 package com.bullish.mall.controller;
 
-import com.bullish.mall.api.security.IsAdmin;
+import com.bullish.mall.security.IsAdmin;
 import com.bullish.mall.dto.DiscountDto;
 import com.bullish.mall.dto.ProductDto;
 import com.bullish.mall.dto.SkuDto;

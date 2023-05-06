@@ -1,4 +1,4 @@
-package com.bullish.mall.api.exception;
+package com.bullish.mall.exception;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;

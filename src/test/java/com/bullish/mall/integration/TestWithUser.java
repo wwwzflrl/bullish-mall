@@ -1,8 +1,8 @@
 package com.bullish.mall.integration;
 
-import com.bullish.mall.api.security.JwtService;
-import com.bullish.mall.core.user.User;
-import com.bullish.mall.core.user.UserRepository;
+import com.bullish.mall.service.JwtService;
+import com.bullish.mall.entity.User;
+import com.bullish.mall.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;

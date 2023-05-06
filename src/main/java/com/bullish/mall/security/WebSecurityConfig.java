@@ -1,4 +1,4 @@
-package com.bullish.mall.api.security;
+package com.bullish.mall.security;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;

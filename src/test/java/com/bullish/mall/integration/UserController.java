@@ -1,7 +1,7 @@
 package com.bullish.mall.integration;
 
-import com.bullish.mall.api.request.LoginDto;
-import com.bullish.mall.api.security.DefaultJwtService;
+import com.bullish.mall.dto.param.LoginParam;
+import com.bullish.mall.service.impl.DefaultJwtService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserApiTest extends TestWithUser {
+public class UserController extends TestWithUser {
   @Autowired private MockMvc mockMvc;
 
   @Autowired private DefaultJwtService jwtService;
@@ -36,14 +36,15 @@ public class UserApiTest extends TestWithUser {
         .get("/user")
         .then()
         .statusCode(200)
-        .body("errors.username[0]", equalTo("must not be blank"));
+        .body("username", equalTo("totti"))
+        .body("admin", equalTo(false));
   }
 
   @Test
   public void fail_to_valid_login_dto() throws Exception {
     given()
         .contentType("application/json")
-        .body(LoginDto.builder().username("").build())
+        .body(LoginParam.builder().username("").build())
         .when()
         .post("/user/login")
         .then()
@@ -55,7 +56,7 @@ public class UserApiTest extends TestWithUser {
   public void fail_to_login_no_valid_user() throws Exception {
     given()
         .contentType("application/json")
-        .body(LoginDto.builder().username("fake user").build())
+        .body(LoginParam.builder().username("fake user").build())
         .when()
         .post("/user/login")
         .then()
@@ -67,7 +68,7 @@ public class UserApiTest extends TestWithUser {
   public void success_to_login_as_admin() throws Exception {
     given()
         .contentType("application/json")
-        .body(LoginDto.builder().username("admin").build())
+        .body(LoginParam.builder().username("admin").build())
         .when()
         .post("/user/login")
         .then()

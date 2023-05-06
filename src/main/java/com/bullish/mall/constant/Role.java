@@ -1,4 +1,4 @@
-package com.bullish.mall.api.security;
+package com.bullish.mall.constant;
 
 public enum Role {
   ADMIN,

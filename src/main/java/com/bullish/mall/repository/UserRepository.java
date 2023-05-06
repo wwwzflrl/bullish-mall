@@ -1,5 +1,6 @@
-package com.bullish.mall.core.user;
+package com.bullish.mall.repository;
 
+import com.bullish.mall.entity.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

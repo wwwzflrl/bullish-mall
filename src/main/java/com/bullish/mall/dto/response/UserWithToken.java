@@ -1,6 +1,6 @@
-package com.bullish.mall.api.response;
+package com.bullish.mall.dto.response;
 
-import com.bullish.mall.core.user.User;
+import com.bullish.mall.entity.User;
 import lombok.Getter;
 
 @Getter

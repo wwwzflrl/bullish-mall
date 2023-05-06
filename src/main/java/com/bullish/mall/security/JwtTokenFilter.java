@@ -1,7 +1,9 @@
-package com.bullish.mall.api.security;
+package com.bullish.mall.security;
 
-import com.bullish.mall.core.user.User;
-import com.bullish.mall.core.user.UserRepository;
+import com.bullish.mall.constant.Role;
+import com.bullish.mall.entity.User;
+import com.bullish.mall.repository.UserRepository;
+import com.bullish.mall.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,11 +1,11 @@
-package com.bullish.mall.api;
+package com.bullish.mall.controller;
 
-import com.bullish.mall.api.exception.InvalidAuthenticationException;
-import com.bullish.mall.api.request.LoginDto;
-import com.bullish.mall.api.response.UserWithToken;
-import com.bullish.mall.api.security.JwtService;
-import com.bullish.mall.core.user.User;
-import com.bullish.mall.core.user.UserRepository;
+import com.bullish.mall.exception.InvalidAuthenticationException;
+import com.bullish.mall.dto.param.LoginParam;
+import com.bullish.mall.dto.response.UserWithToken;
+import com.bullish.mall.service.JwtService;
+import com.bullish.mall.entity.User;
+import com.bullish.mall.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
-public class UserApi {
+public class UserController {
   @Autowired private JwtService jwtService;
 
   @Autowired private UserRepository userRepository;
@@ -27,8 +27,8 @@ public class UserApi {
   }
 
   @PostMapping("/login")
-  public ResponseEntity userLogin(@Valid @RequestBody LoginDto loginDto) {
-    Optional<User> user = userRepository.findByUsername(loginDto.getUsername());
+  public ResponseEntity userLogin(@Valid @RequestBody LoginParam loginParam) {
+    Optional<User> user = userRepository.findByUsername(loginParam.getUsername());
     if (user.isPresent()) {
       return ResponseEntity.ok(new UserWithToken(user.get(), jwtService.toToken(user.get())));
     } else {

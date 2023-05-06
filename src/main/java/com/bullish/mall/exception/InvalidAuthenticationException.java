@@ -1,4 +1,4 @@
-package com.bullish.mall.api.exception;
+package com.bullish.mall.exception;
 
 public class InvalidAuthenticationException extends RuntimeException {
   public InvalidAuthenticationException() {
