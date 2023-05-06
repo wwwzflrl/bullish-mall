@@ -9,26 +9,24 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
 abstract class TestWithUser {
-    @Autowired
-    protected UserRepository userRepository;
+  @Autowired protected UserRepository userRepository;
 
-    @Autowired
-    protected JwtService jwtService;
+  @Autowired protected JwtService jwtService;
 
-    protected String adminToken;
+  protected String adminToken;
 
-    protected String userToken;
+  protected String userToken;
 
-    protected void userFixture() {
-        userRepository.deleteAll();
-        User admin = userRepository.save(User.builder().admin(true).username("admin").build());
-        User user = userRepository.save(User.builder().admin(false).username("totti").build());
-        adminToken = jwtService.toToken(admin);
-        userToken = jwtService.toToken(user);
-    }
+  protected void userFixture() {
+    userRepository.deleteAll();
+    User admin = userRepository.save(User.builder().admin(true).username("admin").build());
+    User user = userRepository.save(User.builder().admin(false).username("totti").build());
+    adminToken = jwtService.toToken(admin);
+    userToken = jwtService.toToken(user);
+  }
 
-    @BeforeEach
-    public void setUp() throws Exception {
-        userFixture();
-    }
+  @BeforeEach
+  public void setUp() throws Exception {
+    userFixture();
+  }
 }

@@ -13,5 +13,5 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class TargetConfig extends CommonConfig {
-    private List<Long> productIds;
+  private List<Long> productIds;
 }

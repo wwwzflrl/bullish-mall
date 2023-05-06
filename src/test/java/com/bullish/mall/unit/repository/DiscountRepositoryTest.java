@@ -12,13 +12,12 @@ import java.io.IOException;
 
 public class DiscountRepositoryTest extends DbTestBase {
 
-    @Autowired
-    DiscountRepository discountRepository;
+  @Autowired DiscountRepository discountRepository;
 
-    @Test
-    public void successToSaveReadJson() throws IOException {
-        DiscountConfigDto config = DiscountUtil.createDiscountConfigDto(0);
-        Discount discount = discountRepository.save(Discount.builder().config(config).build());
-        Assertions.assertEquals(discount.getConfig(), config);
-    }
+  @Test
+  public void successToSaveReadJson() throws IOException {
+    DiscountConfigDto config = DiscountUtil.createDiscountConfigDto(0);
+    Discount discount = discountRepository.save(Discount.builder().config(config).build());
+    Assertions.assertEquals(discount.getConfig(), config);
+  }
 }

@@ -12,15 +12,13 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 public class Product extends BaseEntity {
-    @Id
-    @GeneratedValue
-    private Long id;
+  @Id @GeneratedValue private Long id;
 
-    private String name;
+  private String name;
 
-    private String content;
+  private String content;
 
-    @Setter
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
-    private List<Sku> skuList;
+  @Setter
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+  private List<Sku> skuList;
 }

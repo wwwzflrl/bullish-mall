@@ -3,14 +3,14 @@ package com.bullish.mall.api.exception;
 import org.springframework.validation.Errors;
 
 public class InvalidRequestException extends RuntimeException {
-    private final Errors errors;
+  private final Errors errors;
 
-    public InvalidRequestException(Errors errors) {
-        super("");
-        this.errors = errors;
-    }
+  public InvalidRequestException(Errors errors) {
+    super("");
+    this.errors = errors;
+  }
 
-    public Errors getErrors() {
-        return errors;
-    }
+  public Errors getErrors() {
+    return errors;
+  }
 }

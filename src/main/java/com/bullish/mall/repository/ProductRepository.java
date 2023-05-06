@@ -8,9 +8,9 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends CrudRepository<Product, Long> {
-    @Override
-    List<Product> findAll();
+  @Override
+  List<Product> findAll();
 
-    @Override
-    <S extends Product> List<S> saveAll(Iterable<S> entities);
+  @Override
+  <S extends Product> List<S> saveAll(Iterable<S> entities);
 }

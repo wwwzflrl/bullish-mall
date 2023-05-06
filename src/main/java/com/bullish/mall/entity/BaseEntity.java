@@ -13,26 +13,23 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @NoArgsConstructor
 public abstract class BaseEntity {
-    @JsonIgnore
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+  @JsonIgnore
+  @Column(name = "created_at", nullable = false)
+  private LocalDateTime createdAt;
 
-    @JsonIgnore
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+  @JsonIgnore
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 
-    @JsonIgnore
-    @Version
-    private Long version;
+  @JsonIgnore @Version private Long version;
 
-    @PrePersist
-    void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
+  @PrePersist
+  void onCreate() {
+    this.createdAt = LocalDateTime.now();
+  }
 
-    @PreUpdate
-    void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
+  @PreUpdate
+  void onUpdate() {
+    this.updatedAt = LocalDateTime.now();
+  }
 }

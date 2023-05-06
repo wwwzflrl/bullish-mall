@@ -15,13 +15,11 @@ import org.hibernate.annotations.Type;
 @SuperBuilder
 @NoArgsConstructor
 public class Discount extends BaseEntity {
-    @Id
-    @GeneratedValue
-    private Long id;
+  @Id @GeneratedValue private Long id;
 
-    private String description;
+  private String description;
 
-    @Type(JsonType.class)
-    @Column(nullable = false, columnDefinition = "json")
-    private DiscountConfigDto config;
+  @Type(JsonType.class)
+  @Column(nullable = false, columnDefinition = "json")
+  private DiscountConfigDto config;
 }

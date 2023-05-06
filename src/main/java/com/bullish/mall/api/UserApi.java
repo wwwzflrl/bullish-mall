@@ -17,24 +17,22 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/user")
 public class UserApi {
-    @Autowired
-    private JwtService jwtService;
+  @Autowired private JwtService jwtService;
 
-    @Autowired
-    private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
-    @GetMapping
-    public ResponseEntity userInfo(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(user);
+  @GetMapping
+  public ResponseEntity userInfo(@AuthenticationPrincipal User user) {
+    return ResponseEntity.ok(user);
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity userLogin(@Valid @RequestBody LoginDto loginDto) {
+    Optional<User> user = userRepository.findByUsername(loginDto.getUsername());
+    if (user.isPresent()) {
+      return ResponseEntity.ok(new UserWithToken(user.get(), jwtService.toToken(user.get())));
+    } else {
+      throw new InvalidAuthenticationException();
     }
-
-    @PostMapping("/login")
-    public ResponseEntity userLogin(@Valid @RequestBody LoginDto loginDto) {
-        Optional<User> user = userRepository.findByUsername(loginDto.getUsername());
-        if (user.isPresent()) {
-            return ResponseEntity.ok(new UserWithToken(user.get(), jwtService.toToken(user.get())));
-        } else {
-            throw new InvalidAuthenticationException();
-        }
-    }
+  }
 }

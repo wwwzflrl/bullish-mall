@@ -15,15 +15,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DiscountConfigDto {
-    @NotNull
-    @Valid
-    private ConditionConfig conditionConfig;
+  @NotNull @Valid private ConditionConfig conditionConfig;
 
-    @NotNull
-    @Valid
-    private ProfitConfig profitConfig;
+  @NotNull @Valid private ProfitConfig profitConfig;
 
-    @NotNull
-    @Valid
-    private TargetConfig targetConfig;
+  @NotNull @Valid private TargetConfig targetConfig;
 }

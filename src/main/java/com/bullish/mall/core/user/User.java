@@ -19,11 +19,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Table(name = "BullishUser")
 public class User extends BaseEntity {
-    @Id
-    @GeneratedValue
-    private Long id;
+  @Id @GeneratedValue private Long id;
 
-    private String username;
+  private String username;
 
-    private Boolean admin = false;
+  private Boolean admin = false;
 }

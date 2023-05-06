@@ -14,5 +14,5 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class ProfitConfig extends CommonConfig {
-    private BigDecimal unit;
+  private BigDecimal unit;
 }

@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class ConditionConfig extends CommonConfig {
-    private Long unit;
+  private Long unit;
 
-    private BigDecimal amount;
+  private BigDecimal amount;
 }

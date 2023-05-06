@@ -13,38 +13,40 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    @Bean
-    public JwtTokenFilter jwtTokenFilter() {
-        return new JwtTokenFilter();
-    }
+  @Bean
+  public JwtTokenFilter jwtTokenFilter() {
+    return new JwtTokenFilter();
+  }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http
-                .csrf().disable()
-                .httpBasic().disable()
-                .formLogin().disable()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(
-                        (request, response, ex) -> {
-                            response.sendError(
-                                    HttpServletResponse.SC_UNAUTHORIZED,
-                                    ex.getMessage()
-                            );
-                        }
-                )
-                .and()
-                .authorizeRequests(requests -> requests
-                        .requestMatchers("/h2**").permitAll()
-                        .requestMatchers("/user/login").permitAll()
-                        .anyRequest().authenticated()
-                );
+    http.csrf()
+        .disable()
+        .httpBasic()
+        .disable()
+        .formLogin()
+        .disable()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .exceptionHandling()
+        .authenticationEntryPoint(
+            (request, response, ex) -> {
+              response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
+            })
+        .and()
+        .authorizeRequests(
+            requests ->
+                requests
+                    .requestMatchers("/h2**")
+                    .permitAll()
+                    .requestMatchers("/user/login")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated());
 
-        http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
+    http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+    return http.build();
+  }
 }

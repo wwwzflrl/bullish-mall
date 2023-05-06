@@ -12,9 +12,9 @@ import java.util.List;
 @Getter
 @JsonRootName("errors")
 public class ErrorResource {
-    private List<FieldErrorResource> fieldErrors;
+  private List<FieldErrorResource> fieldErrors;
 
-    public ErrorResource(List<FieldErrorResource> fieldErrorResources) {
-        this.fieldErrors = fieldErrorResources;
-    }
+  public ErrorResource(List<FieldErrorResource> fieldErrorResources) {
+    this.fieldErrors = fieldErrorResources;
+  }
 }

@@ -8,13 +8,13 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class OrderPreviewDto {
-    private BigDecimal amount;
+  private BigDecimal amount;
 
-    private BigDecimal actualAmount;
+  private BigDecimal actualAmount;
 
-    private BigDecimal discountReduce;
+  private BigDecimal discountReduce;
 
-    private Long count;
+  private Long count;
 
-    private CartDto cart;
+  private CartDto cart;
 }

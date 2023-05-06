@@ -22,85 +22,99 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/product")
 public class ProductController {
-    @Autowired
-    ProductRepository productRepository;
+  @Autowired ProductRepository productRepository;
 
-    @Autowired
-    DiscountRepository discountRepository;
+  @Autowired DiscountRepository discountRepository;
 
-    @Autowired
-    TargetFactory targetFactory;
+  @Autowired TargetFactory targetFactory;
 
-    @GetMapping
-    public ResponseEntity getProductList() {
-        List<Product> productList = productRepository.findAll();
-        List<Discount> discountList = discountRepository.findAll();
-        List<ProductDto> productDtoList =productList.stream().map((product) -> ProductDto.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .content(product.getContent())
-                .skuList(product.getSkuList().stream()
-                        .map((sku) -> SkuDto.builder()
-                            .id(sku.getId())
-                            .price(sku.getPrice())
-                            .tags(sku.getTags().stream().toList())
-                            .build()
-                        ).collect(Collectors.toList()))
-                .discountList(discountList.stream()
-                        .filter(discount -> targetFactory
-                            .getBean(discount.getConfig().getTargetConfig().getType())
-                            .map((strategy) -> strategy.allow(product.getId(), discount.getConfig().getTargetConfig()))
-                            .orElseGet(() -> false)
-                        ).map((discount -> DiscountDto.builder()
-                                .description(discount.getDescription())
-                                .id(discount.getId())
-                                .config(discount.getConfig())
-                                .build()
-                        )).collect(Collectors.toList()))
-                .build()
-        ).collect(Collectors.toList());
-        return ResponseEntity.ok(productDtoList);
-    }
+  @GetMapping
+  public ResponseEntity getProductList() {
+    List<Product> productList = productRepository.findAll();
+    List<Discount> discountList = discountRepository.findAll();
+    List<ProductDto> productDtoList =
+        productList.stream()
+            .map(
+                (product) ->
+                    ProductDto.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .content(product.getContent())
+                        .skuList(
+                            product.getSkuList().stream()
+                                .map(
+                                    (sku) ->
+                                        SkuDto.builder()
+                                            .id(sku.getId())
+                                            .price(sku.getPrice())
+                                            .tags(sku.getTags().stream().toList())
+                                            .build())
+                                .collect(Collectors.toList()))
+                        .discountList(
+                            discountList.stream()
+                                .filter(
+                                    discount ->
+                                        targetFactory
+                                            .getBean(
+                                                discount.getConfig().getTargetConfig().getType())
+                                            .map(
+                                                (strategy) ->
+                                                    strategy.allow(
+                                                        product.getId(),
+                                                        discount.getConfig().getTargetConfig()))
+                                            .orElseGet(() -> false))
+                                .map(
+                                    (discount ->
+                                        DiscountDto.builder()
+                                            .description(discount.getDescription())
+                                            .id(discount.getId())
+                                            .config(discount.getConfig())
+                                            .build()))
+                                .collect(Collectors.toList()))
+                        .build())
+            .collect(Collectors.toList());
+    return ResponseEntity.ok(productDtoList);
+  }
 
-    @IsAdmin
-    @PostMapping
-    public ResponseEntity createProduct(@Valid @RequestBody ProductParam productParam) {
-        Product product = Product.builder()
-                .content(productParam.getContent())
-                .name(productParam.getName())
-                .build();
-        product.setSkuList(productParam.getSkuList()
-                .stream()
-                .map((sku) -> Sku
-                        .builder()
+  @IsAdmin
+  @PostMapping
+  public ResponseEntity createProduct(@Valid @RequestBody ProductParam productParam) {
+    Product product =
+        Product.builder().content(productParam.getContent()).name(productParam.getName()).build();
+    product.setSkuList(
+        productParam.getSkuList().stream()
+            .map(
+                (sku) ->
+                    Sku.builder()
                         .tags(sku.getTags().stream().collect(Collectors.toSet()))
                         .price(sku.getPrice())
                         .product(product)
-                        .build()
-                ).collect(Collectors.toList()));
-        return ResponseEntity.ok(productRepository.save(product));
-    }
+                        .build())
+            .collect(Collectors.toList()));
+    return ResponseEntity.ok(productRepository.save(product));
+  }
 
-    @IsAdmin
-    @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable("id") Long id) {
-        productRepository.deleteById(id);
-    }
+  @IsAdmin
+  @DeleteMapping("/{id}")
+  public void deleteProduct(@PathVariable("id") Long id) {
+    productRepository.deleteById(id);
+  }
 
-    @IsAdmin
-    @PostMapping("/discount")
-    public ResponseEntity createDiscount(@Valid @RequestBody DiscountDto discountDto) {
-        Discount discount = discountRepository.save(Discount.builder()
-                        .description(discountDto.getDescription())
-                        .config(discountDto.getConfig())
-                .build()
-        );
-        return ResponseEntity.ok(discount);
-    }
+  @IsAdmin
+  @PostMapping("/discount")
+  public ResponseEntity createDiscount(@Valid @RequestBody DiscountDto discountDto) {
+    Discount discount =
+        discountRepository.save(
+            Discount.builder()
+                .description(discountDto.getDescription())
+                .config(discountDto.getConfig())
+                .build());
+    return ResponseEntity.ok(discount);
+  }
 
-    @IsAdmin
-    @DeleteMapping("/discount/{id}")
-    public void deletedDiscount(@PathVariable("id") Long id) {
-        discountRepository.deleteById(id);
-    }
+  @IsAdmin
+  @DeleteMapping("/discount/{id}")
+  public void deletedDiscount(@PathVariable("id") Long id) {
+    discountRepository.deleteById(id);
+  }
 }

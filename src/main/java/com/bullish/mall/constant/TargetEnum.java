@@ -6,10 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum TargetEnum {
+  FULL_PRODUCT("full_product"),
 
-    FULL_PRODUCT("full_product"),
+  SPECIFIED_PRODUCT("specific_product");
 
-    SPECIFIED_PRODUCT("specific_product");
-
-    private String type;
+  private String type;
 }

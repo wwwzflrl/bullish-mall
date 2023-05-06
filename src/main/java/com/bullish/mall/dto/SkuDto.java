@@ -18,14 +18,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SkuDto {
-    private Long id;
+  private Long id;
 
-    @Min(0)
-    @Digits(integer = 8, fraction = 2)
-    private BigDecimal price;
+  @Min(0)
+  @Digits(integer = 8, fraction = 2)
+  private BigDecimal price;
 
-
-    @NotEmpty(message = "need at least one tag")
-    @Valid
-    private List<@NotBlank String> tags;
+  @NotEmpty(message = "need at least one tag")
+  @Valid
+  private List<@NotBlank String> tags;
 }

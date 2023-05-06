@@ -8,16 +8,15 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class PricePreviewItemDto {
-    private Boolean pass;
+  private Boolean pass;
 
-    private String[] reason;
+  private String[] reason;
 
-    private BigDecimal amount;
+  private BigDecimal amount;
 
-    private BigDecimal actualAmount;
+  private BigDecimal actualAmount;
 
-    private BigDecimal discountReduce;
+  private BigDecimal discountReduce;
 
-    private Long count;
-
+  private Long count;
 }

@@ -12,29 +12,31 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class DiscountUtil {
-    public static DiscountConfigDto createDiscountConfigDto(Integer index) {
-        return DiscountConfigDto.builder()
-                .conditionConfig(ConditionConfig.builder()
-                        .type(ConditionEnum.FULL_PIECE.name())
-                        .amount(new BigDecimal(100 + index))
-                        .unit(index.longValue())
-                        .build()
-                ).targetConfig(TargetConfig.builder()
-                        .type(TargetEnum.FULL_PRODUCT.name())
-                        .productIds(List.of(index.longValue()))
-                        .build()
-                ).profitConfig(ProfitConfig.builder()
-                        .type(ProfitEnum.FIX_AMOUNT.name())
-                        .unit(new BigDecimal(30 + index))
-                        .build()
-                ).build();
-    }
+  public static DiscountConfigDto createDiscountConfigDto(Integer index) {
+    return DiscountConfigDto.builder()
+        .conditionConfig(
+            ConditionConfig.builder()
+                .type(ConditionEnum.FULL_PIECE.name())
+                .amount(new BigDecimal(100 + index))
+                .unit(index.longValue())
+                .build())
+        .targetConfig(
+            TargetConfig.builder()
+                .type(TargetEnum.FULL_PRODUCT.name())
+                .productIds(List.of(index.longValue()))
+                .build())
+        .profitConfig(
+            ProfitConfig.builder()
+                .type(ProfitEnum.FIX_AMOUNT.name())
+                .unit(new BigDecimal(30 + index))
+                .build())
+        .build();
+  }
 
-    public static Discount getDefaultDiscount(Integer index) {
-        return Discount.builder()
-                .description("description" + index)
-                .config(DiscountUtil.createDiscountConfigDto(index))
-                .build();
-
-    }
+  public static Discount getDefaultDiscount(Integer index) {
+    return Discount.builder()
+        .description("description" + index)
+        .config(DiscountUtil.createDiscountConfigDto(index))
+        .build();
+  }
 }

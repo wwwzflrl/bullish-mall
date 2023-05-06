@@ -6,12 +6,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ConditionEnum {
+  FULL_AMOUNT("full_amount"),
 
-    FULL_AMOUNT("full_amount"),
+  FULL_PIECE("full_piece"),
 
-    FULL_PIECE("full_piece"),
+  EVERY_N("every_n");
 
-    EVERY_N("every_n");
-
-    private String type;
+  private String type;
 }

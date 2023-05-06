@@ -16,19 +16,17 @@ import java.util.Set;
 @SuperBuilder
 @NoArgsConstructor
 public class Sku extends BaseEntity {
-    @Id
-    @GeneratedValue
-    private Long id;
+  @Id @GeneratedValue private Long id;
 
-    @Column(precision=10, scale=2)
-    private BigDecimal price;
+  @Column(precision = 10, scale = 2)
+  private BigDecimal price;
 
-    @Type(JsonType.class)
-    @Column(nullable = false, columnDefinition = "json")
-    private Set<String> tags;
+  @Type(JsonType.class)
+  @Column(nullable = false, columnDefinition = "json")
+  private Set<String> tags;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private Product product;
+  @JsonIgnore
+  @ManyToOne
+  @JoinColumn(nullable = false)
+  private Product product;
 }

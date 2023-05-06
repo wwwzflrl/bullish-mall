@@ -20,53 +20,53 @@ import java.util.List;
 import java.util.Optional;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired private JwtService jwtService;
-    private final String header = "Authorization";
+  @Autowired private UserRepository userRepository;
+  @Autowired private JwtService jwtService;
+  private final String header = "Authorization";
 
-    @Override
-    protected void doFilterInternal(
-            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-        getTokenString(request.getHeader(header))
-                .flatMap(token -> jwtService.getSubFromToken(token))
-                .ifPresent(
-                        username -> {
-                            if (SecurityContextHolder.getContext().getAuthentication() == null) {
-                                userRepository
-                                        .findByUsername(username)
-                                        .ifPresent(
-                                                user -> {
-                                                    UsernamePasswordAuthenticationToken authenticationToken =
-                                                            new UsernamePasswordAuthenticationToken(
-                                                                    user, null, getGrantedAuthorities(user));
-                                                    authenticationToken.setDetails(
-                                                            new WebAuthenticationDetailsSource().buildDetails(request));
-                                                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                                                });
-                            }
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
+    getTokenString(request.getHeader(header))
+        .flatMap(token -> jwtService.getSubFromToken(token))
+        .ifPresent(
+            username -> {
+              if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                userRepository
+                    .findByUsername(username)
+                    .ifPresent(
+                        user -> {
+                          UsernamePasswordAuthenticationToken authenticationToken =
+                              new UsernamePasswordAuthenticationToken(
+                                  user, null, getGrantedAuthorities(user));
+                          authenticationToken.setDetails(
+                              new WebAuthenticationDetailsSource().buildDetails(request));
+                          SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                         });
+              }
+            });
 
-        filterChain.doFilter(request, response);
-    }
+    filterChain.doFilter(request, response);
+  }
 
-    private Optional<String> getTokenString(String header) {
-        if (header == null) {
-            return Optional.empty();
-        } else {
-            String[] split = header.split(" ");
-            if (split.length < 2) {
-                return Optional.empty();
-            } else {
-                return Optional.ofNullable(split[1]);
-            }
-        }
+  private Optional<String> getTokenString(String header) {
+    if (header == null) {
+      return Optional.empty();
+    } else {
+      String[] split = header.split(" ");
+      if (split.length < 2) {
+        return Optional.empty();
+      } else {
+        return Optional.ofNullable(split[1]);
+      }
     }
+  }
 
-    private List<GrantedAuthority> getGrantedAuthorities(User user) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getAdmin() ? Role.ADMIN.name() : Role.USER.name()));
-        return authorities;
-    }
+  private List<GrantedAuthority> getGrantedAuthorities(User user) {
+    List<GrantedAuthority> authorities = new ArrayList<>();
+    authorities.add(
+        new SimpleGrantedAuthority(user.getAdmin() ? Role.ADMIN.name() : Role.USER.name()));
+    return authorities;
+  }
 }

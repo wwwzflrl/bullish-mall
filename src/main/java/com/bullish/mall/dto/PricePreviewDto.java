@@ -8,6 +8,6 @@ import java.util.List;
 @Data
 @Builder
 public class PricePreviewDto {
-    private PricePreviewDto preview;
-    private List<PricePreviewDto> previewList;
+  private PricePreviewDto preview;
+  private List<PricePreviewDto> previewList;
 }
