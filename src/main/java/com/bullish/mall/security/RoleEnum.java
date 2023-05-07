@@ -1,4 +1,4 @@
-package com.bullish.mall.util.constant;
+package com.bullish.mall.security;
 
 public enum RoleEnum {
   ADMIN,

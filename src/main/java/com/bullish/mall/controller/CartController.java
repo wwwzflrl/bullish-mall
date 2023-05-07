@@ -89,6 +89,6 @@ public class CartController {
   @GetMapping("/preview")
   public ResponseEntity previewCart(@AuthenticationPrincipal User user) {
     List<BasketItem> basketItemList = basketItemRepository.findByUserId(user.getId());
-    return ResponseEntity.ok(discountService.calcDiscountResults(basketItemList));
+    return ResponseEntity.ok(discountService.calcCartDiscountPreview(basketItemList));
   }
 }

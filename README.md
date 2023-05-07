@@ -43,29 +43,23 @@ mvn spring-boot:run
 The application will run on 8080 port.
 And try to visit http://localhost:8080/user/welcome
 
-### Promotion
+### Discount
 
-#### Promotion Type
+#### Discount Type
 
 * Product Promotion (Each Product)
-    * X % off
-    * X dollar
-    * Buy X Product, get Y Product free
-
-* Total Promotion (Whole order)
-    * Over X dollar, minus Y dollar
-    * Over X dollar, Y % off
+    * Buy X Dollar, get Y Dollar free
+    * Buy X Product, get Y discount free
+    * Every Xth product, get Y rate free
 
 #### Promotion Limitation
 
-* Every product, at most one Product Promotion
-* Whole order have at most one promotion
+* Every kind of product sku, have at most one Product discount
 
 ```
 Example 1
 Product A, price 8,  buy 3 get 1 free, 
 Product B, price 10, 20% off
-Total Promotion: Over 50, minus 10
 
 Client buy 5 A and 20 B
 

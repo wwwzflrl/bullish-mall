@@ -208,7 +208,11 @@ public class CartControllerTest extends TestWithUser {
           .get("/cart/preview")
           .then()
           .statusCode(200)
-          .body("size()", equalTo(2));
+          .body("originalAmount", equalTo(57225.00F))
+          .body("discountAmount", equalTo(3))
+          .body("payAmount", equalTo(57222.00F))
+          .body("quantity", equalTo(285))
+          .body("discountCalculateDtoList.size()", equalTo(2));
     }
   }
 

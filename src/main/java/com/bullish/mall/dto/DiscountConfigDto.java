@@ -1,23 +1,28 @@
 package com.bullish.mall.dto;
 
-import com.bullish.mall.dto.config.ConditionConfig;
-import com.bullish.mall.dto.config.ProfitConfig;
-import com.bullish.mall.dto.config.TargetConfig;
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class DiscountConfigDto {
-  @NotNull @Valid private ConditionConfig conditionConfig;
 
-  @NotNull @Valid private ProfitConfig profitConfig;
+  @NotNull @NotBlank private String type;
 
-  @NotNull @Valid private TargetConfig targetConfig;
+  @NotNull
+  @Digits(integer = 8, fraction = 2)
+  private BigDecimal paramX;
+
+  @NotNull
+  @Digits(integer = 8, fraction = 2)
+  private BigDecimal paramY;
 }

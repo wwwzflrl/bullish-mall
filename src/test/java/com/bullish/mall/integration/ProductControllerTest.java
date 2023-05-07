@@ -1,7 +1,6 @@
 package com.bullish.mall.integration;
 
 import com.bullish.mall.dto.DiscountDto;
-import com.bullish.mall.util.constant.TargetEnum;
 import com.bullish.mall.dto.SkuDto;
 import com.bullish.mall.dto.param.ProductParam;
 import com.bullish.mall.entity.Discount;
@@ -60,17 +59,9 @@ public class ProductControllerTest extends TestWithUser {
               List.of(ProductUtil.getDefaultProduct(0), ProductUtil.getDefaultProduct(1)));
       List<Discount> discountList =
           List.of(DiscountUtil.getDefaultDiscount(0), DiscountUtil.getDefaultDiscount(1));
-      discountList
-          .get(0)
-          .getConfig()
-          .getTargetConfig()
-          .setProductIds(List.of(productList.get(1).getId()));
-      discountList
-          .get(0)
-          .getConfig()
-          .getTargetConfig()
-          .setType(TargetEnum.SPECIFIED_PRODUCT.name());
-      List<Discount> sda = discountRepository.saveAll(discountList);
+      discountList.get(0).getConfig();
+      discountList.get(0).getConfig();
+      discountRepository.saveAll(discountList);
 
       given()
           .contentType("application/json")
@@ -79,11 +70,15 @@ public class ProductControllerTest extends TestWithUser {
           .get("/product")
           .then()
           .statusCode(200)
-          .body("size()", equalTo(2))
-          .body("[0].name", equalTo("name0"))
-          .body("[0].content", equalTo("content0"))
-          .body("[0].skuList[0].price", equalTo(200.00F))
-          .body("[0].skuList[0].tags[0]", equalTo("Tag0"));
+          .body("productList.size()", equalTo(2))
+          .body("productList[0].name", equalTo("name0"))
+          .body("productList[0].content", equalTo("content0"))
+          .body("productList[0].skuList[0].price", equalTo(200.00F))
+          .body("productList[0].skuList[0].tags[0]", equalTo("Tag0"))
+          .body("productList[0].skuList.size()", equalTo(1))
+          .body("productList[1].skuList.size()", equalTo(1))
+          .body("discountList.size()", equalTo(2))
+          .body("discountList[0].config.type", equalTo("FULL_AMOUNT"));
     }
   }
 
@@ -205,9 +200,9 @@ public class ProductControllerTest extends TestWithUser {
     @Test
     public void failWhenDtoIsInvalid() {
       DiscountDto discountDto = DiscountUtil.getDefaultDiscountDto(1);
-      discountDto.getConfig().getConditionConfig().setAmount(new BigDecimal(100.333));
-      discountDto.getConfig().getProfitConfig().setUnit(new BigDecimal(100.333));
-      discountDto.getConfig().getTargetConfig().setType("");
+      discountDto.getConfig().setParamX(new BigDecimal(100.333));
+      discountDto.getConfig().setParamY(new BigDecimal(200.333));
+      discountDto.getConfig().setType("");
       given()
           .contentType("application/json")
           .header("Authorization", "Token " + adminToken)
@@ -216,12 +211,12 @@ public class ProductControllerTest extends TestWithUser {
           .post("/product/discount")
           .then()
           .body(
-              "errors.\"config.conditionConfig.amount\"",
+              "errors.\"config.paramY\"",
               contains("numeric value out of bounds (<8 digits>.<2 digits> expected)"))
           .body(
-              "errors.\"config.profitConfig.unit\"",
+              "errors.\"config.paramX\"",
               contains("numeric value out of bounds (<8 digits>.<2 digits> expected)"))
-          .body("errors.\"config.targetConfig.type\"", contains("must not be blank"));
+          .body("errors.\"config.type\"", contains("must not be blank"));
     }
 
     @Test

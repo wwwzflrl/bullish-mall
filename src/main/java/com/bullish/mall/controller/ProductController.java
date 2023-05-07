@@ -1,7 +1,6 @@
 package com.bullish.mall.controller;
 
-import com.bullish.mall.dto.result.DiscountResult;
-import com.bullish.mall.entity.BasketItem;
+import com.bullish.mall.dto.response.ProductResponse;
 import com.bullish.mall.security.IsAdmin;
 import com.bullish.mall.dto.DiscountDto;
 import com.bullish.mall.dto.ProductDto;
@@ -12,7 +11,6 @@ import com.bullish.mall.entity.Product;
 import com.bullish.mall.entity.Sku;
 import com.bullish.mall.repository.DiscountRepository;
 import com.bullish.mall.repository.ProductRepository;
-import com.bullish.mall.service.rule.valid.ValidFactory;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,58 +26,44 @@ public class ProductController {
 
   @Autowired DiscountRepository discountRepository;
 
-  @Autowired ValidFactory validFactory;
-
   @GetMapping
   public ResponseEntity getProductList() {
     List<Product> productList = productRepository.findAll();
     List<Discount> discountList = discountRepository.findAll();
-    List<ProductDto> productDtoList =
-        productList.stream()
-            .map(
-                (product) ->
-                    ProductDto.builder()
-                        .id(product.getId())
-                        .name(product.getName())
-                        .content(product.getContent())
-                        .skuList(
-                            product.getSkuList().stream()
-                                .map(
-                                    (sku) ->
-                                        SkuDto.builder()
-                                            .id(sku.getId())
-                                            .price(sku.getPrice())
-                                            .tags(sku.getTags().stream().toList())
-                                            .build())
-                                .collect(Collectors.toList()))
-                        .discountList(
-                            discountList.stream()
-                                .filter(
-                                    discount ->
-                                        validFactory
-                                            .getBean(discount)
-                                            .handle(
-                                                BasketItem.builder()
-                                                    .product(product)
-                                                    .discount(discount)
-                                                    .build(),
-                                                new DiscountResult())
-                                            .getValidResultList()
-                                            .stream()
-                                            .allMatch(
-                                                valid ->
-                                                    valid.getQuantity() && valid.getDiscount()))
-                                .map(
-                                    (discount ->
-                                        DiscountDto.builder()
-                                            .description(discount.getDescription())
-                                            .id(discount.getId())
-                                            .config(discount.getConfig())
-                                            .build()))
-                                .collect(Collectors.toList()))
-                        .build())
-            .collect(Collectors.toList());
-    return ResponseEntity.ok(productDtoList);
+    ProductResponse response =
+        ProductResponse.builder()
+            .ProductList(
+                productList.stream()
+                    .map(
+                        (product) ->
+                            ProductDto.builder()
+                                .id(product.getId())
+                                .name(product.getName())
+                                .content(product.getContent())
+                                .skuList(
+                                    product.getSkuList().stream()
+                                        .map(
+                                            (sku) ->
+                                                SkuDto.builder()
+                                                    .id(sku.getId())
+                                                    .price(sku.getPrice())
+                                                    .tags(sku.getTags().stream().toList())
+                                                    .build())
+                                        .collect(Collectors.toList()))
+                                .build())
+                    .collect(Collectors.toList()))
+            .DiscountList(
+                discountList.stream()
+                    .map(
+                        discount ->
+                            DiscountDto.builder()
+                                .description(discount.getDescription())
+                                .id(discount.getId())
+                                .config(discount.getConfig())
+                                .build())
+                    .collect(Collectors.toList()))
+            .build();
+    return ResponseEntity.ok(response);
   }
 
   @IsAdmin

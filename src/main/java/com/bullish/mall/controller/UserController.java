@@ -35,7 +35,12 @@ public class UserController {
   public ResponseEntity userLogin(@Valid @RequestBody LoginParam loginParam) {
     Optional<User> user = userRepository.findByUsername(loginParam.getUsername());
     if (user.isPresent()) {
-      return ResponseEntity.ok(new UserWithToken(user.get(), jwtService.toToken(user.get())));
+      return ResponseEntity.ok(
+          UserWithToken.builder()
+              .id(user.get().getId())
+              .username(user.get().getUsername())
+              .token(jwtService.toToken(user.get()))
+              .build());
     } else {
       throw new InvalidAuthenticationException();
     }

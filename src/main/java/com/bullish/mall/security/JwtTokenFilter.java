@@ -1,6 +1,5 @@
 package com.bullish.mall.security;
 
-import com.bullish.mall.util.constant.RoleEnum;
 import com.bullish.mall.entity.User;
 import com.bullish.mall.repository.UserRepository;
 import com.bullish.mall.service.JwtService;
