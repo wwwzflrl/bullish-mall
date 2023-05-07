@@ -1,22 +1,14 @@
 package com.bullish.mall.dto;
 
+import com.bullish.mall.dto.result.DiscountResult;
+import com.bullish.mall.entity.BasketItem;
 import lombok.Builder;
 import lombok.Data;
-
-import java.math.BigDecimal;
 
 @Data
 @Builder
 public class PricePreviewItemDto {
-  private Boolean pass;
+  private DiscountResult discountResult;
 
-  private String[] reason;
-
-  private BigDecimal amount;
-
-  private BigDecimal actualAmount;
-
-  private BigDecimal discountReduce;
-
-  private Long count;
+  private BasketItem BasketItem;
 }

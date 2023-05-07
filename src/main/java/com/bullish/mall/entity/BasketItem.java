@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.engine.internal.Cascade;
 
 @EqualsAndHashCode(callSuper = true)
 @Getter

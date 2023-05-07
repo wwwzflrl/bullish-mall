@@ -57,11 +57,7 @@ public class ProductController {
                                         targetFactory
                                             .getBean(
                                                 discount.getConfig().getTargetConfig().getType())
-                                            .map(
-                                                (strategy) ->
-                                                    strategy.allow(
-                                                        product.getId(),
-                                                        discount.getConfig().getTargetConfig()))
+                                            .map((strategy) -> strategy.isTarget(product, discount))
                                             .orElseGet(() -> false))
                                 .map(
                                     (discount ->

@@ -5,9 +5,9 @@ import com.bullish.mall.entity.*;
 import com.bullish.mall.repository.BasketItemRepository;
 import com.bullish.mall.repository.DiscountRepository;
 import com.bullish.mall.repository.SkuRepository;
+import com.bullish.mall.service.DiscountService;
 import com.bullish.mall.util.ValidList;
 import jakarta.validation.Valid;
-import jakarta.validation.Validator;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ public class CartController {
 
   @Autowired private DiscountRepository discountRepository;
 
-  @Autowired private Validator validator;
+  @Autowired private DiscountService discountService;
 
   @GetMapping
   public ResponseEntity getBasketList(@AuthenticationPrincipal User user) {
@@ -84,5 +84,11 @@ public class CartController {
       throw new AccessDeniedException("Can't delete basket not belong to you");
     }
     basketItemRepository.deleteAllById(ids);
+  }
+
+  @GetMapping("/preview")
+  public ResponseEntity previewCart(@AuthenticationPrincipal User user) {
+    List<BasketItem> basketItemList = basketItemRepository.findByUserId(user.getId());
+    return ResponseEntity.ok(discountService.calcDiscountResults(basketItemList));
   }
 }

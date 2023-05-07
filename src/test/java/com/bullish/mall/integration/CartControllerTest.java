@@ -183,6 +183,35 @@ public class CartControllerTest extends TestWithUser {
     }
   }
 
+  @Nested
+  public class PreviewCart {
+    @Test
+    public void failToPreview() {
+      List<BasketItem> basketItemList = createThreeCartItemList();
+      given()
+          .contentType("application/json")
+          .body(List.of(basketItemList.get(0).getId(), basketItemList.get(1).getId()))
+          .when()
+          .delete("/cart/preview")
+          .then()
+          .statusCode(403);
+    }
+
+    @Test
+    public void successToPreview() {
+      List<BasketItem> basketItemList = createThreeCartItemList();
+      given()
+          .contentType("application/json")
+          .header("Authorization", "Token " + userToken)
+          .body(List.of(basketItemList.get(1).getId(), basketItemList.get(2).getId()))
+          .when()
+          .get("/cart/preview")
+          .then()
+          .statusCode(200)
+          .body("size()", equalTo(2));
+    }
+  }
+
   private List<BasketItem> createThreeCartItemList() {
     List<Product> productList =
         productRepository.saveAll(

@@ -1,6 +1,6 @@
 package com.bullish.mall.security;
 
-import com.bullish.mall.util.constant.Role;
+import com.bullish.mall.util.constant.RoleEnum;
 import com.bullish.mall.entity.User;
 import com.bullish.mall.repository.UserRepository;
 import com.bullish.mall.service.JwtService;
@@ -68,7 +68,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
   private List<GrantedAuthority> getGrantedAuthorities(User user) {
     List<GrantedAuthority> authorities = new ArrayList<>();
     authorities.add(
-        new SimpleGrantedAuthority(user.getAdmin() ? Role.ADMIN.name() : Role.USER.name()));
+        new SimpleGrantedAuthority(user.getAdmin() ? RoleEnum.ADMIN.name() : RoleEnum.USER.name()));
     return authorities;
   }
 }
