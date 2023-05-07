@@ -1,5 +1,48 @@
 # bullish mall
 
+### Pre-requests
+
+* jdk version >= 17
+* Maven
+
+Run following command to install java package
+
+```
+.\mvnw clean install
+
+OR
+
+mvn clean install
+
+```
+
+#### Test Case
+
+If you want to use spring built in mvn, please run
+
+```
+.\mvnw test
+```
+
+You can also use your global mvn run test case
+
+```agsl
+mvn test
+
+```
+
+#### Run Application
+
+Same as before, you can run
+
+```agsl
+./mvnw spring-boot:run
+mvn spring-boot:run
+```
+
+The application will run on 8080 port.
+And try to visit http://localhost:8080/user/welcome
+
 ### Promotion
 
 #### Promotion Type

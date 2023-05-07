@@ -21,6 +21,11 @@ public class UserController {
 
   @Autowired private UserRepository userRepository;
 
+  @GetMapping("welcome")
+  public ResponseEntity welcome() {
+    return ResponseEntity.ok("You are welcome");
+  }
+
   @GetMapping
   public ResponseEntity userInfo(@AuthenticationPrincipal User user) {
     return ResponseEntity.ok(user);
