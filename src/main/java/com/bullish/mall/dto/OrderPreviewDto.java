@@ -16,5 +16,5 @@ public class OrderPreviewDto {
 
   private Long count;
 
-  private CartDto cart;
+  private OrderDto cart;
 }

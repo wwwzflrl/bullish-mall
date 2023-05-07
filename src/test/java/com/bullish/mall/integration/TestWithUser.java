@@ -15,12 +15,16 @@ abstract class TestWithUser {
 
   protected String adminToken;
 
+  protected User admin;
+
   protected String userToken;
+
+  protected User user;
 
   protected void userFixture() {
     userRepository.deleteAll();
-    User admin = userRepository.save(User.builder().admin(true).username("admin").build());
-    User user = userRepository.save(User.builder().admin(false).username("totti").build());
+    admin = userRepository.save(User.builder().admin(true).username("admin").build());
+    user = userRepository.save(User.builder().admin(false).username("totti").build());
     adminToken = jwtService.toToken(admin);
     userToken = jwtService.toToken(user);
   }

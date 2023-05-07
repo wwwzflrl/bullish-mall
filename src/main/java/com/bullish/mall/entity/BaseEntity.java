@@ -18,7 +18,7 @@ public abstract class BaseEntity {
   private LocalDateTime createdAt;
 
   @JsonIgnore
-  @Column(name = "updated_at")
+  @Column(name = "updated_at", nullable = false)
   private LocalDateTime updatedAt;
 
   @JsonIgnore @Version private Long version;
@@ -26,6 +26,7 @@ public abstract class BaseEntity {
   @PrePersist
   void onCreate() {
     this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
   }
 
   @PreUpdate

@@ -97,7 +97,7 @@ public class ProductController {
   @IsAdmin
   @DeleteMapping("/{id}")
   public void deleteProduct(@PathVariable("id") Long id) {
-    productRepository.deleteById(id);
+    productRepository.softDeleteById(id);
   }
 
   @IsAdmin
@@ -115,6 +115,6 @@ public class ProductController {
   @IsAdmin
   @DeleteMapping("/discount/{id}")
   public void deletedDiscount(@PathVariable("id") Long id) {
-    discountRepository.deleteById(id);
+    discountRepository.softDeleteById(id);
   }
 }

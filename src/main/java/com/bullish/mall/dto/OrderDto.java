@@ -2,10 +2,10 @@ package com.bullish.mall.dto;
 
 import java.util.List;
 
-public class CartDto {
+public class OrderDto {
   private Long id;
 
-  private List<CartItemDto> cartItemList;
+  private List<BasketItemDto> cartItemList;
 
   private DiscountDto chosenDiscount;
 }

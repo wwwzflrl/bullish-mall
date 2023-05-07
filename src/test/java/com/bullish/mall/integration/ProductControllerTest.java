@@ -1,6 +1,7 @@
 package com.bullish.mall.integration;
 
-import com.bullish.mall.constant.TargetEnum;
+import com.bullish.mall.dto.DiscountDto;
+import com.bullish.mall.util.constant.TargetEnum;
 import com.bullish.mall.dto.SkuDto;
 import com.bullish.mall.dto.param.ProductParam;
 import com.bullish.mall.entity.Discount;
@@ -69,7 +70,7 @@ public class ProductControllerTest extends TestWithUser {
           .getConfig()
           .getTargetConfig()
           .setType(TargetEnum.SPECIFIED_PRODUCT.name());
-      discountRepository.saveAll(discountList);
+      List<Discount> sda = discountRepository.saveAll(discountList);
 
       given()
           .contentType("application/json")
@@ -165,7 +166,7 @@ public class ProductControllerTest extends TestWithUser {
   @Nested
   public class deleteProduct {
     @Test
-    public void fail_to_delete_invalid_product_id() {
+    public void failToDeleteInvalidPath() {
       given()
           .contentType("application/json")
           .header("Authorization", "Token " + adminToken)
@@ -177,7 +178,7 @@ public class ProductControllerTest extends TestWithUser {
     }
 
     @Test
-    public void fail_to_delete_product_for_user() {
+    public void failToDeleteByNoRight() {
       given()
           .contentType("application/json")
           .header("Authorization", "Token " + userToken)
@@ -188,7 +189,7 @@ public class ProductControllerTest extends TestWithUser {
     }
 
     @Test
-    public void success_to_delete_product() {
+    public void successToSoftDelete() {
       Long id = productRepository.save(ProductUtil.getDefaultProduct(0)).getId();
       given()
           .contentType("application/json")
@@ -197,7 +198,86 @@ public class ProductControllerTest extends TestWithUser {
           .delete("/product/" + id)
           .then()
           .statusCode(200);
-      Assertions.assertEquals(productRepository.count(), 0);
+      Assertions.assertEquals(productRepository.findById(id).get().getDeleted(), true);
+    }
+  }
+
+  @Nested
+  public class createDiscount {
+    @Test
+    public void failWhenDtoIsInvalid() {
+      DiscountDto discountDto = DiscountUtil.getDefaultDiscountDto(1);
+      discountDto.getConfig().getConditionConfig().setAmount(new BigDecimal(100.333));
+      discountDto.getConfig().getProfitConfig().setUnit(new BigDecimal(100.333));
+      discountDto.getConfig().getTargetConfig().setType("");
+      given()
+          .contentType("application/json")
+          .header("Authorization", "Token " + adminToken)
+          .body(discountDto)
+          .when()
+          .post("/product/discount")
+          .then()
+          .body(
+              "errors.\"config.conditionConfig.amount\"",
+              contains("numeric value out of bounds (<8 digits>.<2 digits> expected)"))
+          .body(
+              "errors.\"config.profitConfig.unit\"",
+              contains("numeric value out of bounds (<8 digits>.<2 digits> expected)"))
+          .body("errors.\"config.targetConfig.type\"", contains("must not be blank"));
+    }
+
+    @Test
+    public void failWhenUserIdNotAdmin() {
+      DiscountDto discountDto = DiscountUtil.getDefaultDiscountDto(1);
+      given()
+          .contentType("application/json")
+          .header("Authorization", "Token " + userToken)
+          .body(discountDto)
+          .when()
+          .post("/product/discount")
+          .then()
+          .statusCode(403);
+    }
+
+    @Test
+    public void successWhenDtoIsValid() {
+      DiscountDto discountDto = DiscountUtil.getDefaultDiscountDto(1);
+      given()
+          .contentType("application/json")
+          .header("Authorization", "Token " + adminToken)
+          .body(discountDto)
+          .when()
+          .post("/product/discount")
+          .then()
+          .statusCode(200);
+    }
+  }
+
+  @Nested
+  public class deleteDiscount {
+    @Test
+    public void failWhenUserIdNotAdmin() {
+      given()
+          .contentType("application/json")
+          .header("Authorization", "Token " + userToken)
+          .when()
+          .delete("/product/discount/" + 10)
+          .then()
+          .statusCode(403);
+    }
+
+    @Test
+    public void successToSoftDelete() {
+      Long id = discountRepository.save(DiscountUtil.getDefaultDiscount(5)).getId();
+
+      given()
+          .contentType("application/json")
+          .header("Authorization", "Token " + adminToken)
+          .when()
+          .delete("/product/discount/" + id)
+          .then()
+          .statusCode(200);
+      Assertions.assertEquals(discountRepository.findById(id).get().getDeleted(), true);
     }
   }
 }

@@ -28,7 +28,7 @@ public class UserController extends TestWithUser {
   }
 
   @Test
-  public void success_get_user_info() throws Exception {
+  public void successGetUserInfo() throws Exception {
     given()
         .contentType("application/json")
         .header("Authorization", "Token " + userToken)
@@ -41,7 +41,7 @@ public class UserController extends TestWithUser {
   }
 
   @Test
-  public void fail_to_valid_login_dto() throws Exception {
+  public void failForInvalidRequest() throws Exception {
     given()
         .contentType("application/json")
         .body(LoginParam.builder().username("").build())
@@ -53,7 +53,7 @@ public class UserController extends TestWithUser {
   }
 
   @Test
-  public void fail_to_login_no_valid_user() throws Exception {
+  public void failForInvalidUser() throws Exception {
     given()
         .contentType("application/json")
         .body(LoginParam.builder().username("fake user").build())
@@ -65,7 +65,7 @@ public class UserController extends TestWithUser {
   }
 
   @Test
-  public void success_to_login_as_admin() throws Exception {
+  public void successToLoginAsAdmin() throws Exception {
     given()
         .contentType("application/json")
         .body(LoginParam.builder().username("admin").build())

@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
@@ -61,6 +62,18 @@ public class CustomizeExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(InvalidAuthenticationException.class)
   public ResponseEntity<Object> handleInvalidAuthentication(
       InvalidAuthenticationException e, WebRequest request) {
+    return ResponseEntity.status(UNPROCESSABLE_ENTITY)
+        .body(
+            new HashMap<String, Object>() {
+              {
+                put("message", e.getMessage());
+              }
+            });
+  }
+
+  @ExceptionHandler(NoSuchElementException.class)
+  public ResponseEntity<Object> handleInvalidAuthentication(
+      NoSuchElementException e, WebRequest request) {
     return ResponseEntity.status(UNPROCESSABLE_ENTITY)
         .body(
             new HashMap<String, Object>() {

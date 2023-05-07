@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CartItemDto {
+public class BasketItemDto {
   private ProductDto product;
 
   private Long quantity;

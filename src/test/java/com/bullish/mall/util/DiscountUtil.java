@@ -1,8 +1,9 @@
 package com.bullish.mall.util;
 
-import com.bullish.mall.constant.ConditionEnum;
-import com.bullish.mall.constant.ProfitEnum;
-import com.bullish.mall.constant.TargetEnum;
+import com.bullish.mall.dto.DiscountDto;
+import com.bullish.mall.util.constant.ConditionEnum;
+import com.bullish.mall.util.constant.ProfitEnum;
+import com.bullish.mall.util.constant.TargetEnum;
 import com.bullish.mall.dto.DiscountConfigDto;
 import com.bullish.mall.dto.config.ConditionConfig;
 import com.bullish.mall.dto.config.ProfitConfig;
@@ -30,6 +31,13 @@ public class DiscountUtil {
                 .type(ProfitEnum.FIX_AMOUNT.name())
                 .unit(new BigDecimal(30 + index))
                 .build())
+        .build();
+  }
+
+  public static DiscountDto getDefaultDiscountDto(Integer index) {
+    return DiscountDto.builder()
+        .description("description" + index)
+        .config(DiscountUtil.createDiscountConfigDto(index))
         .build();
   }
 

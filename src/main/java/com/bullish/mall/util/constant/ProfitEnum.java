@@ -1,4 +1,4 @@
-package com.bullish.mall.constant;
+package com.bullish.mall.util.constant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
