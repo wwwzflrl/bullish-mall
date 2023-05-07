@@ -1,4 +1,4 @@
-package com.bullish.mall.unit.repository;
+package com.bullish.mall.dbTest;
 
 import com.bullish.mall.dto.DiscountConfigDto;
 import com.bullish.mall.entity.Discount;

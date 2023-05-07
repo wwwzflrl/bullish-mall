@@ -1,5 +1,7 @@
 package com.bullish.mall.controller;
 
+import com.bullish.mall.dto.result.DiscountResult;
+import com.bullish.mall.entity.BasketItem;
 import com.bullish.mall.security.IsAdmin;
 import com.bullish.mall.dto.DiscountDto;
 import com.bullish.mall.dto.ProductDto;
@@ -10,7 +12,7 @@ import com.bullish.mall.entity.Product;
 import com.bullish.mall.entity.Sku;
 import com.bullish.mall.repository.DiscountRepository;
 import com.bullish.mall.repository.ProductRepository;
-import com.bullish.mall.service.rule.target.TargetFactory;
+import com.bullish.mall.service.rule.valid.ValidFactory;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,7 @@ public class ProductController {
 
   @Autowired DiscountRepository discountRepository;
 
-  @Autowired TargetFactory targetFactory;
+  @Autowired ValidFactory validFactory;
 
   @GetMapping
   public ResponseEntity getProductList() {
@@ -54,11 +56,19 @@ public class ProductController {
                             discountList.stream()
                                 .filter(
                                     discount ->
-                                        targetFactory
-                                            .getBean(
-                                                discount.getConfig().getTargetConfig().getType())
-                                            .map((strategy) -> strategy.isTarget(product, discount))
-                                            .orElseGet(() -> false))
+                                        validFactory
+                                            .getBean(discount)
+                                            .handle(
+                                                BasketItem.builder()
+                                                    .product(product)
+                                                    .discount(discount)
+                                                    .build(),
+                                                new DiscountResult())
+                                            .getValidResultList()
+                                            .stream()
+                                            .allMatch(
+                                                valid ->
+                                                    valid.getQuantity() && valid.getDiscount()))
                                 .map(
                                     (discount ->
                                         DiscountDto.builder()

@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ProfitEnum {
-  REDUCED_AMOUNT("reduce_amount"),
+  DEFAULT("default"),
 
-  REDUCED_RATE("reduce_rate"),
+  REDUCED_AMOUNT("reduce_amount"),
 
   FIX_AMOUNT("fix_amount");
 

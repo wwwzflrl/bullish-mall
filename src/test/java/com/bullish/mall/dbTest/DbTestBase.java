@@ -1,4 +1,4 @@
-package com.bullish.mall.unit.repository;
+package com.bullish.mall.dbTest;
 
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

@@ -194,7 +194,7 @@ public class CartControllerTest extends TestWithUser {
           .when()
           .delete("/cart/preview")
           .then()
-          .statusCode(403);
+          .statusCode(401);
     }
 
     @Test

@@ -1,4 +1,4 @@
-package com.bullish.mall.unit.repository;
+package com.bullish.mall.dbTest;
 
 import com.bullish.mall.entity.Product;
 import com.bullish.mall.repository.ProductRepository;

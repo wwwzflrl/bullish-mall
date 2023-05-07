@@ -6,6 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ConditionEnum {
+  DEFAULT("default"),
+
   FULL_AMOUNT("full_amount"),
 
   FULL_PIECE("full_piece"),

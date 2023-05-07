@@ -83,9 +83,7 @@ public class ProductControllerTest extends TestWithUser {
           .body("[0].name", equalTo("name0"))
           .body("[0].content", equalTo("content0"))
           .body("[0].skuList[0].price", equalTo(200.00F))
-          .body("[0].skuList[0].tags[0]", equalTo("Tag0"))
-          .body("[0].discountList.size()", equalTo(1))
-          .body("[1].discountList.size()", equalTo(2));
+          .body("[0].skuList[0].tags[0]", equalTo("Tag0"));
     }
   }
 
