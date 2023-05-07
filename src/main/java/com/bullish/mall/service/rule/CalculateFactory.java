@@ -26,7 +26,7 @@ public class CalculateFactory {
             .map(e -> e.getConfig())
             .map(e -> e.getType())
             .orElse(DiscountEnum.NONE.getType());
-    DiscountEnum profitEnum = DiscountEnum.valueOf(type);
+    DiscountEnum profitEnum = DiscountEnum.from(type);
     switch (profitEnum) {
       case FULL_AMOUNT:
         return fullAmountDiscountCalculate;

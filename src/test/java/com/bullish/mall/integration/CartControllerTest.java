@@ -209,7 +209,7 @@ public class CartControllerTest extends TestWithUser {
           .then()
           .statusCode(200)
           .body("originalAmount", equalTo(57225.00F))
-          .body("discountAmount", equalTo(3))
+          .body("discountAmount", equalTo(3.0F))
           .body("payAmount", equalTo(57222.00F))
           .body("quantity", equalTo(285))
           .body("discountCalculateDtoList.size()", equalTo(2));

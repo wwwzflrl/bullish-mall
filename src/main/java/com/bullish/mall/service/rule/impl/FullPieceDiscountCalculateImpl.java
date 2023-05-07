@@ -41,7 +41,8 @@ public class FullPieceDiscountCalculateImpl extends AbstractDiscountCalculateImp
             .map(o -> o.getConfig())
             .map(o -> o.getParamY())
             .orElse(BigDecimal.ZERO);
-    discountCalculateDto.setDiscountAmount(discountAmount);
+    discountCalculateDto.setDiscountAmount(
+        discountCalculateDto.getValid() ? discountAmount : BigDecimal.ZERO);
     discountCalculateDto.setPayAmount(
         discountCalculateDto.getOriginalAmount().subtract(discountAmount));
   }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +42,11 @@ public class DiscountServiceImpl implements DiscountService {
       previewDto.setQuantity(previewDto.getQuantity() + calculateDto.getQuantity());
     }
 
+    previewDto.setDiscountAmount(
+        previewDto.getDiscountAmount().setScale(2, RoundingMode.HALF_EVEN));
+    previewDto.setPayAmount(previewDto.getPayAmount().setScale(2, RoundingMode.HALF_EVEN));
+    previewDto.setOriginalAmount(
+        previewDto.getOriginalAmount().setScale(2, RoundingMode.HALF_EVEN));
     return previewDto;
   }
 }

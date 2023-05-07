@@ -4,6 +4,8 @@ import com.bullish.mall.dto.DiscountCalculateDto;
 import com.bullish.mall.entity.BasketItem;
 import com.bullish.mall.service.rule.DiscountCalculate;
 
+import java.math.BigDecimal;
+
 abstract class AbstractDiscountCalculateImpl implements DiscountCalculate {
 
   @Override
@@ -21,6 +23,7 @@ abstract class AbstractDiscountCalculateImpl implements DiscountCalculate {
 
   protected void validate(BasketItem basketItem, DiscountCalculateDto discountCalculateDto) {
     if (basketItem.getProduct() == null
+        || basketItem.getProduct().getDeleted() == null
         || basketItem.getProduct().getDeleted()
         || basketItem.getSku().getPrice() == null) {
       discountCalculateDto.setValid(false);

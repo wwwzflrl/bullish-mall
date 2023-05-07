@@ -18,4 +18,16 @@ public enum DiscountEnum {
   EVERY_N_RATE("every_n_rate");
 
   private String type;
+
+  public static DiscountEnum from(String text) {
+    DiscountEnum discountEnum;
+
+    try {
+      discountEnum = valueOf(text);
+    } catch (IllegalArgumentException | NullPointerException e) {
+      discountEnum = DiscountEnum.NONE;
+    }
+
+    return discountEnum;
+  }
 }
